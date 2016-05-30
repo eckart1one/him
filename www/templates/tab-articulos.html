@@ -1,0 +1,18 @@
+<ion-view view-title="Articulos">
+  <ion-content>
+      <div class="bar item-input-inset bar-light">
+          <label class="item-input-wrapper">
+            <i class="icon ion-search placeholder-icon"></i>
+              <input type="search" ng-model="busqueda" placeholder="Buscar" />
+          </label>
+      </div>   
+   <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right item-text-wrap" ng-repeat="articulo in articulos | filter:  busqueda" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
+<img ng-src="{{articulo.imagen}}">
+        <h2>{{articulo.titulo}}</h2>
+        <p>{{articulo.extracto | limitTo : 100 }}{{ articulo.extracto.length > 100 ? '&hellip;' : '' }}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
