@@ -12,12 +12,12 @@ app.controller('ChatsCtrl', function($scope, Chats ,$http,$sce) {
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-  var defaultHTTPHeaders = {
-      'Content-Type' :  'application/json',
-      'Accept' : 'application/json'
-  };
+  // var defaultHTTPHeaders = {
+  //     'Content-Type' :  'application/json',
+  //     'Accept' : 'application/json'
+  // };
     
-  $http.defaults.headers.post = defaultHTTPHeaders;
+  //$http.defaults.headers.post = defaultHTTPHeaders;
     
     $scope.nota =  {id: new Date().getTime().toString(), mensaje:''};
     console.log($scope.nota.descripcion);
@@ -35,7 +35,6 @@ app.controller('ChatsCtrl', function($scope, Chats ,$http,$sce) {
       console.log($scope.nota.id);
       console.log($scope.nota.mensaje);
        var link = 'http://www.birdev.mx/message_app/public/messages';
-
         $http.post(link, {mensaje : $scope.nota.mensaje,identificador: $scope.nota.id}).then(function (res){
             $scope.response = res.data;
         });

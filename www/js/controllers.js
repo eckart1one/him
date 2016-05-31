@@ -4,52 +4,65 @@ app.controller('DashCtrl', function($scope,Articulos) {
     $scope.articulos = Articulos.all();
 });
 
-app.controller('ChatsCtrl', function($scope, Chats ,$http,$sce) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-  // var defaultHTTPHeaders = {
-  //     'Content-Type' :  'application/json',
-  //     'Accept' : 'application/json'
-  // };
-    
-  //$http.defaults.headers.post = defaultHTTPHeaders;
-    
-    $scope.nota =  {id: new Date().getTime().toString(), mensaje:''};
-    console.log($scope.nota.descripcion);
-  
-    $scope.enviar =  function(){
-      
-//    var urlCompleta = 'http://www.birdev.mx/message_app/public/messages';
-//    var postUrl = $sce.trustAsResourceUrl(urlCompleta);
-//    $http.post(postUrl,$scope.nota).then(function(){
-//        alert('Guardado');
-//    },function(){
-//        alert('error');
-//    });  
-      
-      console.log($scope.nota.id);
-      console.log($scope.nota.mensaje);
-       var link = 'http://www.birdev.mx/message_app/public/messages';
-        $http.post(link, {mensaje : $scope.nota.mensaje,identificador: $scope.nota.id},{ headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(function (res){
+
+
+
+app.controller('ChatsCtrl', function($scope, Chats ,$http,$sce) 
+{   
+    $scope.res =  [];
+    $scope.nota =  {id: '', mensaje:''};
+    $scope.respuesta = {id:'' , mensaje: ''};
+    var link = 'http://www.birdev.mx/message_app/public/messages';
+
+
+    $scope.actualiza = function(){
+      linkGet = link +'/'+ $scope.respuesta.id;
+      console.log(link +'/'+ $scope.respuesta.id);
+        
+        $http.get( linkGet).then(function(res){
+          console.log(res);
+          console.log(res.data.data.mensaje);
+          
+          $scope.respuesta.mensaje = res.data.data.mensaje;
+
+          console.log($scope.respuesta.mensaje);
+          //funcion para recorreo el array 
+          angular.forEach(res.data.children,function(res){
+            $scope.res.push(res.data);
+            console.log(res.data);
+          });
+
+           console.log($scope.res);
+
+           $scope.$broadcast('scroll.refreshComplete');
+
+        }, function(res){
+          console.log(res);
+        }); 
+    }
+
+    $scope.enviar =  function(){  
+        console.log($scope.nota);
+        //creamos el ide unico
+        $scope.nota.id =  new Date().getTime().toString();
+
+        $http.post(link, { mensaje : $scope.nota.mensaje, identificador: $scope.nota.id }).then(function (res){
             $scope.response = res.data;
+            $scope.respuesta.id =  $scope.nota.id;
+
+            $scope.nota.id = '';
+            $scope.nota.mensaje = '';
+            console.log($scope.nota);
         });
-      
-      
-  };
+
+    };  
 
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {
     Chats.remove(chat);
   };
-
-    
-    
 });
+
 
 app.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
