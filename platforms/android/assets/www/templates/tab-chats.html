@@ -1,12 +1,22 @@
 <ion-view view-title="Chats">
     <ion-content>    
+    
+       <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="actualiza()">
+          </ion-refresher>
+
+    <div class="card">
+      <div class="item item-text-wrap" >
+        {{respuesta.mensaje }}
+      </div>
+    </div>
+
+
         <div class="list card">
-            <div class="item-input"> 
-                <input type="text" ng-model="nota.titulo" placeholder="Titulo">
-            </div>
             <div class="item-input">
                 <textarea ng-model="nota.mensaje" placeholder="Mensaje">
-                    {{nota.descripcion}}
+                    
                 </textarea>
             </div>
         </div>
