@@ -148,7 +148,7 @@ $scope.fecha = day + '/' + monthIndex + '/' + year;
     
 });
 
-app.controller('AccountCtrl', function($scope,$state,Auten, $location,ConfiguracionFact,$ionicHistory) {
+app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact,$ionicHistory) {
     if (typeof Auten.validar().matricula != 'undefined') 
     {
       console.log(Auten.validar());
@@ -156,10 +156,26 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $location,Configurac
     else{
        $state.go('login');
     }
+    
+    if( typeof ConfiguracionFact.gett().inicio == 'undefined')
+    {
+      $scope.configuracionDatos = {inicio : '' ,peso: '', altura :  '',duraP :  '',duraS :  '', anti :  '' };
+      $scope.calculo = []; 
+    }else{
+    
+      $scope.configuracionDatos = ConfiguracionFact.gett();
+      $scope.configuracionDatos.inicio = new Date($scope.configuracionDatos.inicio); 
+      $scope.calculo = calcularDias($scope.configuracionDatos); 
 
+      $state.go('tab.account'); 
+    }
+
+
+      // $scope.configuracionDatos = ConfiguracionFact.gett(); 
+      // $scope.onezoneDatepicker.highlights = calcularDias($scope.configuracionDatos); 
 
     // creacion de variables 
-     $scope.configuracionDatos = {peso: '', altura :  '',duraP :  '',duraS :  '', anti :  '' };
+     
 
 
         //crea el objeto para el datepiker
@@ -185,10 +201,32 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $location,Configurac
 //        // your code
 //    }
 //};
-    
+var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
+
+
+// var hi = [
+//     {
+//         date: new Date('Sun Jun 06 2016 00:00:00 GMT-0500 (CDT)'),
+//         color: '#8FD4D9',
+//         textColor: '#fff'
+//     },
+//     {
+//         date: new Date(2016, 5, 18)
+//     },
+//     {
+//         date: new Date(2016, 5, 19)
+//     },
+//     {
+//         date: new Date(2016, 5, 20)
+//     }
+// ];
+
     $scope.onezoneDatepicker = {
     date: new Date(),  
-    mondayFirst: false,                   
+    mondayFirst: false,   
+    months: meses,        
+    daysOfTheWeek: dias,             
     disablePastDays: false,
     disableSwipe: true,
     disableWeekend: false,
@@ -197,30 +235,22 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $location,Configurac
     calendarMode: true,
     hideCancelButton: false,
     hideSetButton: false,
-    highlights:  [
-    {
-        date: new Date(2016, 4, 30),
-        color: '#8FD4D9',
-        textColor: '#fff'
-    },
-    {
-        date: new Date(2016, 1, 18)
-    },
-    {
-        date: new Date(2016, 1, 19)
-    },
-    {
-        date: new Date(2016, 1, 20)
-    }
-],
+    highlights:  $scope.calculo,
 
     callback: function(value){
         console.log(value);
         pulsado(value);
     }
 };
+
+    $scope.irCalendario = function(){
+      $state.go('tab.account'); 
+    }
+
     $scope.configuracion =  function(){
       $state.go('tab.configuracion-calendario'); 
+
+      console.log('*************  hacer ***************')
     }
 
     $scope.guardaConfiguracion = function(){
@@ -228,26 +258,134 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $location,Configurac
       console.log($scope.configuracionDatos);
       ConfiguracionFact.postt($scope.configuracionDatos);
 
-      $ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-
-
-
-      $state.go('tab.account'); 
+       // $ionicHistory.nextViewOptions({
+       //  disableBack: true
+       // });
+       $state.go('tab.account'); 
     }
     
     function pulsado(fecha)
     {
-        $scope.onezoneDatepicker.highlights = [{
-            date: fecha,
-            color: '#8FD4D9',
-            textColor: '#fff'
-            }];
-        
-        //  $location.path('/dia',{fecha : fecha}) 
+      // var nuevo  = { date: fecha, color: '#8FD4D9', textColor: '#fff'};
+      // hi.push(nuevo);
+      // console.log(hi)
+      // $scope.onezoneDatepicker.highlights = hi;
+        // $scope.onezoneDatepicker.highlights = [{
+        //     date: fecha,
+        //     color: '#8FD4D9',
+        //     textColor: '#fff'
+        //     }];
         $state.go('tab.calendario-detalle',{fecha : fecha}); 
     }
+
+
+      var periodCycleDays ;
+      var bleedingDays ;
+      var fertilePhaseStart;
+      var fertilePhaseEnd ;
+      var ovulation ;
+
+      var periodStartDate = new Date();
+
+
+
+    function calcularDias(parametros)
+    {
+      
+      periodCycleDays = parametros.duraP;
+      bleedingDays = parametros.duraS;
+      fertilePhaseStart = periodCycleDays - 20;
+      fertilePhaseEnd = periodCycleDays - 11;
+      ovulation = (fertilePhaseStart-1) + (fertilePhaseEnd - fertilePhaseStart)/2;
+
+      periodStartDate = new Date(parametros.inicio);
+
+      InitialEvents = createEventsForDate(periodStartDate);
+
+      console.log(InitialEvents);
+
+
+      return diasPintados(InitialEvents);
+    }
+
+    function createEventsForDate(date){
+      var timeBetween = Math.abs((date.getTime()) - (periodStartDate.getTime()));
+      var daysBetween = Math.ceil(timeBetween / (1000 * 3600 * 24)); 
+      var cyclesBetween = Math.floor((daysBetween / periodCycleDays));
+      var events = [];
+      // Create next two events to handle multiple sets within one month
+      for(var i=0;i<6;i++){
+        var cycleDaysBetween = periodCycleDays * (cyclesBetween + i);
+        var p = addDays(periodStartDate, cycleDaysBetween);
+        var bleedingEnd = addDays(p, bleedingDays);
+        var fertilePhaseStartDate = addDays(p, fertilePhaseStart);
+        var fertilePhaseEndDate = addDays(p, fertilePhaseEnd);
+        var ovulationDayStart = addDays(p, ovulation)
+        var ovulationDayEnd = new Date(new Date(ovulationDayStart).setHours(23,59,59,999));
+        events.push({
+          "summary": "Period",
+          "begin": p,
+          "end": bleedingEnd 
+        });
+        events.push({
+          "summary": "Fertile",
+          "begin": fertilePhaseStartDate,
+          "end": fertilePhaseEndDate 
+        });
+        events.push({
+          "summary": "Ovulation",
+          "begin": ovulationDayStart,
+          "end": ovulationDayEnd
+        });
+      }
+      return events;
+    }
+
+    function addDays(date, days){
+      var d = new Date(date.valueOf());
+      d.setDate(d.getDate() + days)
+      d.setHours(0,0,0,0);  // set to start of day
+      return d;
+    }
+
+    function diasPintados(InitialEvents){
+      var fechaParaPintar = [];
+
+      InitialEvents.forEach(function(eventos)
+      {
+        // var desc = Object.getOwnPropertyDescriptor(o, name);
+        // Object.defineProperty(copy, name, desc);
+        //console.log(eventos.begin);
+        
+        var inicio = eventos.begin.getTime();
+        var fin = eventos.end.getTime();
+
+         console.log(inicio+' : '+fin);
+        for (var i = inicio; i < fin; i = i + 86400000) {
+
+          if(eventos.summary == "Period"){
+            var temp = { date: new Date(i),color: '#c61810',textColor: '#fff'};
+            fechaParaPintar.push(temp);
+          }
+          if(eventos.summary == "Fertile"){
+            var temp = {date: new Date(i),color: '#336633',textColor: '#fff'};
+            fechaParaPintar.push(temp);
+          }
+          if(eventos.summary == "Ovulation"){
+            var temp = {date: new Date(i),color: '#339cf7',textColor: '#fff'};
+            fechaParaPintar.push(temp);
+          }  
+        }
+
+      });
+
+
+      return fechaParaPintar;
+
+    }
+
+
+
 
 });
 
@@ -309,9 +447,6 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
        title: 'Oh no!!',
        template: 'La matricula o Contraseña son icorrectas :('
      });
-
-     //terminamos con la animacion del refresh
-     $scope.$broadcast('scroll.refreshComplete');
   }
 
 

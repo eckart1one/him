@@ -98,26 +98,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     }
   })
   
-  .state('tab.sintomas', {
-    url: '/sintomas',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/sintomas.html',
-        controller: 'DiaCtrl'
-      }
-    }
-  })
-  
-  .state('tab.anticonceptivo', {
-    url: '/anticonceptivo',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/anticonceptivo.html',
-        controller: 'DiaCtrl'
-      }
-    }
-  })
-  
+ 
   
 .state('tab.account', {
     url: '/account',
