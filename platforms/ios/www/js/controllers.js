@@ -4,52 +4,91 @@ app.controller('DashCtrl', function($scope,Articulos) {
     $scope.articulos = Articulos.all();
 });
 
-app.controller('ChatsCtrl', function($scope, Chats ,$http,$sce) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-  // var defaultHTTPHeaders = {
-  //     'Content-Type' :  'application/json',
-  //     'Accept' : 'application/json'
-  // };
-    
-  //$http.defaults.headers.post = defaultHTTPHeaders;
-    
-    $scope.nota =  {id: new Date().getTime().toString(), mensaje:''};
-    console.log($scope.nota.descripcion);
-  
-    $scope.enviar =  function(){
-      
-//    var urlCompleta = 'http://www.birdev.mx/message_app/public/messages';
-//    var postUrl = $sce.trustAsResourceUrl(urlCompleta);
-//    $http.post(postUrl,$scope.nota).then(function(){
-//        alert('Guardado');
-//    },function(){
-//        alert('error');
-//    });  
-      
-      console.log($scope.nota.id);
-      console.log($scope.nota.mensaje);
-       var link = 'http://www.birdev.mx/message_app/public/messages';
-        $http.post(link, {mensaje : $scope.nota.mensaje,identificador: $scope.nota.id},{ headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(function (res){
-            $scope.response = res.data;
+app.controller('ChatsCtrl', function($scope, Preguntas ,$http,$sce,$ionicPopup,$ionicLoading) 
+{  
+    //constantes y cosas que se tienen que inicializar para el modulo
+    $scope.nota =  {id: '', mensaje:''};
+    $scope.respuesta = {id:'' , mensaje: ''};
+    var link = 'http://www.birdev.mx/message_app/public/messages';
+    var linkRespuesta = 'http://www.birdev.mx/message_app/public/response';
+
+    $scope.respuesta.id = Preguntas.list();
+
+    console.log("local : " + $scope.respuesta.id);
+    // posiblemnte sirva despues
+    // $scope.remove = function(respuesta) {
+    //   Preguntas.remove(respuesta);
+    // };
+
+    $scope.actualiza = function(){
+      linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
+      console.log($scope.respuesta);
+       $http.get(linkGet).then(function successCallback(response) {
+           $scope.respuesta.mensaje = response.data.data.mensaje;
+           angular.forEach(response.data.children,function(response){
+                  $scope.response.push(response.data);
+                });
+            //tenemos que elimiara el id o ponerlo vacio
+           $scope.respuesta.id = '';
+           Preguntas.actualiza( $scope.respuesta);
+          
+          
+           $scope.$broadcast('scroll.refreshComplete');
+           
+        },function errorCallback(response) {
+           var alertPopup = $ionicPopup.alert({
+             title: 'Oh no!!',
+             template: 'Ahun no tenemos una respuesta para ti :('
+           });
+
+           //terminamos con la animacion del refresh
+           $scope.$broadcast('scroll.refreshComplete');
         });
-      
-      
-  };
+    }
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+    $scope.enviar =  function()
+    {  
+        //creamos el ide unico
+        $scope.nota.id =  new Date().getTime().toString();
 
-    
-    
+        $ionicLoading.show({
+            template: 'Enviando...'
+          }).then(function(){
+             console.log("The loading indicator is now displayed");
+          });
+
+        $http.post(link, { mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
+            $scope.response = res.data;
+            $scope.respuesta.id =  $scope.nota.id;
+            $scope.respuesta.mensaje =  '';
+            $scope.nota.id = '';
+            $scope.nota.mensaje = '';
+            
+            console.log("primer consol : " + $scope.respuesta.id);
+
+            Preguntas.actualiza($scope.respuesta);
+            var temp = Preguntas.list();
+            //console.log('lista : '+Preguntas.list());
+            console.log(temp);
+            $ionicLoading.hide().then(function(){
+              console.log("The loading indicator is now hidden");
+            });
+
+        },function errorCallback(response) {
+          $ionicLoading.hide().then(function(){
+              console.log("The loading indicator is now hidden");
+          });
+            var alertPopup = $ionicPopup.alert({
+             title: 'Oh no!!',
+             template: 'Ahun no tenemos una respuesta para ti :('
+           });
+          alertPopup.then(function(res) {
+             console.log('Thank you for not eating my delicious ice cream cone');
+           });
+        });
+    };  
 });
+
 
 app.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);

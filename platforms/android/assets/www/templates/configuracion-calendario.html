@@ -1,0 +1,28 @@
+<ion-view title="Configuración Calendario" id="page19" class=" ">
+    <ion-content padding="true" class="has-header">
+        <form id="configuraciN-form11" class="list ">
+            <label class="item item-input " id="configuraciN-input17">
+                <span class="input-label">Peso</span>
+                <input type="number" min="30" max="200" step="1" placeholder="Peso" ng-model="configuracionDatos.peso">
+                <span class="input-label">kg</span>
+            </label>
+            <label class="item item-input " id="configuraciN-input18">
+                <span class="input-label">Altura</span>
+                <input type="number" min="1.0" max="2.5" step="0.1" placeholder="Altura" ng-model="configuracionDatos.altura">
+                <span class="input-label">m</span>
+            </label>
+            <label class="item item-input " id="configuraciN-input19">
+                <span class="input-label">Duracioón del periodo</span>
+                <input type="number" min="3" max="15" step="1" placeholder="Periodo" ng-model="configuracionDatos.duraP">
+                <span class="input-label">Dias</span>
+            </label>
+            <label class="item item-input " id="configuraciN-input20">
+                <span class="input-label">Duración del Sangrado</span>
+                <input type="number" min="3" max="15" step="1" placeholder="Sangrado" ng-model="configuracionDatos.duraS">
+                <span class="input-label">Dias</span>
+            </label>
+            <ion-toggle toggle-class="toggle-positive" id="configuraciN-toggle3" class="" ng-model="configuracionDatos.anti">Anticonceptivo</ion-toggle>
+        </form>
+        <button id="configuraciN-button11" style="font-weight:600;" class=" button button-positive  button-block " ng-click="guardaConfiguracion()">Guardar</button>
+    </ion-content>
+</ion-view>

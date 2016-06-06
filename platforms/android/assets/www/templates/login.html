@@ -1,0 +1,24 @@
+<ion-view title="Login" id="page7" class=" ">
+    <ion-content padding="true" class="has-header">
+		<div class="row row-center">
+			<h1 style="margin: 0 auto;">Ingreso</h1>
+		</div>
+		<div style="height: 20vh;"></div>
+
+		<div class="row row-center">
+			<div class="col col-100">
+				<div class="list">
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Matricula</span>
+						<input type="number" ng-model="aut.matricula" placeholder="Matricula">
+					</label>
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Contraseña</span>
+						<input type="password" ng-model="aut.pass" placeholder="Contraseña">
+					</label>
+					<a ng-click="validar()" id="login-button3" class="button button-positive  button-block button-outline ">Ingresar</a>
+				</div>
+			</div>
+		</div>
+    </ion-content>
+</ion-view>
