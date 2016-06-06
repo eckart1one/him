@@ -51,6 +51,30 @@ app.factory('Chats', function() {
   };
 });
 
+app.factory('Preguntas', function(){
+    var respuestaId = angular.fromJson(window.localStorage['respuestaId'] || '[]'); 
+    
+    function persist(){
+        window.localStorage['respuestaId'] = angular.toJson(respuestaId);
+        console.log(window.localStorage['respuestaId']);
+    }
+
+    return {
+        list:function(){
+              return respuestaId;
+          },
+        actualiza : function(res){
+           console.log(res);
+            respuestaId = res.id;
+            console.log(respuestaId);
+            //notas.push(nota);
+            persist();
+        }
+    };
+
+} );
+
+
 
 
 app.factory('Articulos', function() {
@@ -103,5 +127,67 @@ app.factory('Articulos', function() {
   };
 });
 
-    }());
+app.factory('Auten', function(){
+   
+    var aut = angular.fromJson(window.localStorage['aut'] || '[]'); 
+    
+    function persist(){
+        window.localStorage['aut'] = angular.toJson(aut);
+    }
+
+    return {
+        validar:function(){
+              return aut;
+          },
+        crearSesion : function(res){
+            aut = res;
+            persist();
+        }
+    };
+
+} );
+
+
+app.factory('ConfiguracionFact', function(){
+   
+    var con = angular.fromJson(window.localStorage['con'] || '[]'); 
+    
+    function persist(){
+        window.localStorage['con'] = angular.toJson(con);
+    }
+
+    return {
+        gett :function(){
+              return con;
+          },
+        postt : function(res){
+            con = res;
+            persist();
+        }
+    };
+
+} );
+
+
+app.factory('DiasFact', function(){
+   
+    var dias = angular.fromJson(window.localStorage['dias'] || '[]'); 
+    
+    function persist(){
+        window.localStorage['dias'] = angular.toJson(dias);
+    }
+
+    return {
+        gett :function(){
+              return dias;
+          },
+        postt : function(dia){
+            dias.push(dia); 
+            persist();
+        }
+    };
+
+} );
+
+    }());//fin de todo
     

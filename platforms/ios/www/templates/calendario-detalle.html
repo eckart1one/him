@@ -12,13 +12,34 @@
                    </div>
                  </label>
             </ion-item>
-            <ion-item class="item-icon-right" href="/#/tab/sintomas">
-                Sintomas
-                <i class="icon ion-chevron-right icon-accessory"></i>
+    
+            <ion-item class="item item-input item-select">
+                <div class="input-label">
+                  Sintomas
+                </div>
+                <select multiple>
+                    <option ng-model="filter.yellow">Vomitos</option>
+                    <option ng-model="filter.yellow">Colicos</option>
+                    <option ng-model="filter.pink">Dolor de cabeza</option>
+                    <option ng-model="filter.uno">Antojos</option>
+                    <option ng-model="filter.dos">Ascos</option>
+                    <option ng-model="filter.tres">Diarrea</option>
+                </select>
             </ion-item>
-             <ion-item class="item-icon-right" href="/#/tab/anticonceptivo">
-                Metodo Anticonseptivo
-                <i class="icon ion-chevron-right icon-accessory"></i>
+
+            <ion-item class="item item-input item-select">
+                <div class="input-label">
+                  Metodos Anticonceptivos
+                </div>
+                <select multiple>
+                    <option ng-model="filter.yellow">Pastilla del dia siguiente</option>
+                    <option ng-model="filter.yellow">Pastilla anticonseptiva</option>
+                    <option ng-model="filter.pink">Dolor de cabeza</option>
+                    <option ng-model="filter.uno">Condon</option>
+                    <option ng-model="filter.dos">Parche</option>
+                    <option ng-model="filter.tres">DIU</option>
+                    <option ng-model="filter.tres">CHIP</option>
+                </select>
             </ion-item>
         </ion-list>
     </ion-content>

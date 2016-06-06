@@ -26,6 +26,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
   // setup an abstract state for the tabs directive
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'loginCtrl'
+  })
     .state('tab', {
     url: '/tab',
     abstract: true,
@@ -81,27 +86,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     }
   })
-  
-  .state('tab.sintomas', {
-    url: '/sintomas',
+
+
+.state('tab.configuracion-calendario', {
+    url: '/configuracion',
     views: {
       'tab-account': {
-        templateUrl: 'templates/sintomas.html',
-        controller: 'DiaCtrl'
+        templateUrl: 'templates/configuracion-calendario.html',
+        controller: 'AccountCtrl'
       }
     }
   })
   
-  .state('tab.anticonceptivo', {
-    url: '/anticonceptivo',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/anticonceptivo.html',
-        controller: 'DiaCtrl'
-      }
-    }
-  })
-  
+ 
   
 .state('tab.account', {
     url: '/account',
@@ -114,7 +111,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/articulos');
+  $urlRouterProvider.otherwise('/login');
 
 });
     

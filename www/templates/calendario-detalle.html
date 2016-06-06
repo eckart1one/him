@@ -1,25 +1,44 @@
 <ion-view view-title="{{fecha}}">
     <ion-content>
         <ion-list>
-            <ion-radio ng-model="choice" ng-value="'inici'">Inicio Periodo</ion-radio>
-            <ion-radio ng-model="choice" ng-value="'fin'">Fin Periodo</ion-radio>
-            <ion-item class="item-toggle">
-                 Relaciones Sexuales
-                 <label class="toggle toggle-assertive">
-                   <input type="checkbox">
-                   <div class="track">
-                     <div class="handle"></div>
-                   </div>
-                 </label>
+            <ion-radio ng-model="diaDatos.inicioP" ng-value="'inici'">Inicio Periodo</ion-radio>
+            <ion-radio ng-model="diaDatos.finP" ng-value="'fin'">Fin Periodo</ion-radio>
+           
+            <ion-toggle toggle-class="toggle-assertive" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones">
+                    Relaciones Sexuales
+            </ion-toggle>
+
+            <ion-item class="item item-input item-select" ng-show="diaDatos.relaciones">
+                <div class="input-label">
+                  Metodos Anticonceptivos
+                </div>
+                <select ng-model="diaDatos.metodo">
+                    <option >Pastilla del dia siguiente</option>
+                    <option >Pastilla anticonseptiva</option>
+                    <option >Dolor de cabeza</option>
+                    <option >Condon</option>
+                    <option >Parche</option>
+                    <option >DIU</option>
+                    <option >CHIP</option>
+                </select>
             </ion-item>
-            <ion-item class="item-icon-right" href="/#/tab/sintomas">
-                Sintomas
-                <i class="icon ion-chevron-right icon-accessory"></i>
-            </ion-item>
-             <ion-item class="item-icon-right" href="/#/tab/anticonceptivo">
-                Metodo Anticonseptivo
-                <i class="icon ion-chevron-right icon-accessory"></i>
+    
+            <ion-item class="item item-input item-select">
+                <div class="input-label">
+                  Sintomas
+                </div>
+                <select ng-model="diaDatos.sintomas">
+                    <option >Vomitos</option>
+                    <option >Colicos</option>
+                    <option >Dolor de cabeza</option>
+                    <option >Antojos</option>
+                    <option >Ascos</option>
+                    <option >Diarrea</option>
+                </select>
             </ion-item>
         </ion-list>
+
+
+         <button id="configuraciN-button11" style="font-weight:600;" class=" button button-positive  button-block " ng-click="guardaDia()">Guardar</button>
     </ion-content>
 </ion-view>

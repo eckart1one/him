@@ -51,7 +51,28 @@ app.factory('Chats', function() {
   };
 });
 
+app.factory('Preguntas', function(){
+    var respuestaId = angular.fromJson(window.localStorage['respuestaId'] || ''); 
+    
+    function persist(){
+        window.localStorage['respuestaId'] = angular.toJson(respuestaId);
+        console.log(window.localStorage['respuestaId']);
+    }
 
+    return {
+        list:function(){
+              return respuestaId;
+          },
+        actualiza : function(res){
+           console.log(res);
+            respuestaId = res.id;
+            console.log(respuestaId);
+            //notas.push(nota);
+            persist();
+        }
+    };
+
+} );
 
 app.factory('Articulos', function() {
   
@@ -102,6 +123,8 @@ app.factory('Articulos', function() {
     }
   };
 });
+
+
 
     }());
     
