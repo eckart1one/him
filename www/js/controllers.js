@@ -1,6 +1,8 @@
 var app = angular.module('starter.controllers', [])
 
-app.controller('DashCtrl', function($scope,$state,Articulos,Auten) {
+app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten) {
+    $scope.articulos = Articulos.all();
+    
     if (typeof Auten.validar().matricula != 'undefined') 
     {
       console.log(Auten.validar());
@@ -9,7 +11,39 @@ app.controller('DashCtrl', function($scope,$state,Articulos,Auten) {
        $state.go('login');
     }
 
-    $scope.articulos = Articulos.all();
+    $scope.CargarNuevosPost =  function()
+    {       
+        var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+        
+        $http.get(urlNuevosArticulos)
+        .success(function(posts){
+            var nuevosArticulos = [];
+            
+            angular.forEach(posts.data,function(post){
+                nuevosArticulos.push(post);    
+            });
+            
+            $scope.articulos = nuevosArticulos.concat($scope.articulos);   
+            console.log($scope.articulos);
+            Articulos.post($scope.articulos);
+            
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
+    
+});
+
+app.controller('articuloCompletoCtrl', function($scope,Auten, $state,$stateParams, Articulos) {
+  if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+    
+  $scope.articulo = Articulos.get($stateParams.articuloId);
+    console.log($scope.articulo);
 });
 
 app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce,$ionicPopup,$ionicLoading) 
@@ -389,16 +423,6 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,Auten, $state,$stateParams, Articulos) {
-  if (typeof Auten.validar().matricula != 'undefined') 
-    {
-      console.log(Auten.validar());
-    }
-    else{
-       $state.go('login');
-    }
-  $scope.articulo = Articulos.get($stateParams.articuloId);
-});
 
 
 

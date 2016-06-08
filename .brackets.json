@@ -1,0 +1,16 @@
+{
+    "jscodehints.detectedExclusions": [
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular/angular.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular/angular.min.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular/index.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-animate/angular-animate.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-animate/angular-animate.min.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-animate/index.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-sanitize/angular-sanitize.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-sanitize/angular-sanitize.min.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-sanitize/index.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-ui-router/release/angular-ui-router.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/www/js/controllers.js",
+        "/Users/jesuszamarripa/Developer/ionic/him/platforms/android/build/intermediates/assets/debug/www/lib/angular-ui-router/src/resolve.js"
+    ]
+}
