@@ -162,10 +162,19 @@ app.factory('DiasFact', function(){
     }
 
     return {
-        gett :function(){
-              return dias;
-          },
-        postt : function(dia){
+        all : function(){
+            return dias;
+        },
+        get: function(fecha){
+            console.log(fecha);
+            for (var i = 0; i < dias.length; i++) {
+                if (dias[i].dia === fecha) {
+                    return dias[i];
+                }
+            }
+            return null;
+        },
+        post : function(dia){
             dias.push(dia); 
             persist();
         }
