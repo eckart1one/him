@@ -1,35 +1,17 @@
-<ion-view view-title="{{articulo.titulo}}">
-  <ion-content class="padding">
-<!--    <img ng-src="{{chat.face}}" style="width: 64px; height: 64px">-->
-   
-<div class="list card">
+<ion-view view-title="{{articulo.title}}">
 
-<!--
-  <div class="item item-avatar">
-    <img src="mcfly.jpg">
-    <h2>Marty McFly</h2>
-    <p>November 05, 1955</p>
-  </div>
--->
-
-  <div class="item item-body">
-    <img class="full-image" ng-src="{{articulo.imagen}}">
-      
-    <p ng-bind-html="articulo.contenido">
-<!--      {{articulo.contenido}}-->
-    </p>
-      
-    <p>
-<!--
-      <a href="#" class="subdued">1 Like</a>
-      <a href="#" class="subdued">5 Comments</a>
--->
-    </p>
-  </div>
-
-</div>
-      
-      
-      
-  </ion-content>
+    <ion-content class="padding">   
+        <div class="list card">
+            <div class="item item-body">
+                <img class="full-image" ng-src="{{articulo.images[0].ruta}}">
+                <p ng-bind-html="articulo.description"></p>
+            </div>
+        </div>
+           <ion-item ng-if="articulo.video.indexOf('http') === 0" >
+            <div class="video-container">
+        <youtube-video video-url="articulo.video"></youtube-video>
+                </div>
+        </ion-item>
+    </ion-content>
+    
 </ion-view>

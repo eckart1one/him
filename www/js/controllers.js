@@ -20,12 +20,30 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten) {
             var nuevosArticulos = [];
             
             angular.forEach(posts.data,function(post){
-                nuevosArticulos.push(post);    
+                if(Articulos.get(post.id) == null ){
+                    console.log('entro');
+                    nuevosArticulos.push(post);        
+                }
             });
             
+            //guardamos todo los nuevo en local
             $scope.articulos = nuevosArticulos.concat($scope.articulos);   
-            console.log($scope.articulos);
             Articulos.post($scope.articulos);
+            
+            //validamos los articulos que deben ser eliminados
+            var existe = null;
+            angular.forEach(Articulos.all() ,function(articulo){
+
+                for (var i = 0; i < posts.data.length; i++) {
+                    if (posts.data[i].id === parseInt(articulo.id)) {
+                        existe = posts.data[i];
+                    }
+                }
+
+                if(existe == null){
+                    Articulos.remove(articulo.id);
+                }    
+            });
             
             $scope.$broadcast('scroll.refreshComplete');
         });
@@ -33,7 +51,7 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten) {
     
 });
 
-app.controller('articuloCompletoCtrl', function($scope,Auten, $state,$stateParams, Articulos) {
+app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos) {
   if (typeof Auten.validar().matricula != 'undefined') 
     {
       console.log(Auten.validar());
@@ -41,9 +59,9 @@ app.controller('articuloCompletoCtrl', function($scope,Auten, $state,$stateParam
     else{
        $state.go('login');
     }
-    
-  $scope.articulo = Articulos.get($stateParams.articuloId);
-    console.log($scope.articulo);
+       
+  $scope.articulo = Articulos.get($stateParams.articuloId);  
+
 });
 
 app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce,$ionicPopup,$ionicLoading) 
