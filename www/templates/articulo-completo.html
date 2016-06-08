@@ -4,6 +4,13 @@
             <div class="item item-body">
                 <img class="full-image" ng-src="{{articulo.images[0].ruta}}">
                 <p ng-bind-html="articulo.description"></p>
+                {{articulo.video}}
+                
+                
+                <p ng-bind-html="<iframe src="http://www.youtube.com/embed/Gym1QEsdHI0" frameborder="0" width="560" height="315"></iframe>"></p>
+	
+		
+
             </div>
         </div>
     </ion-content>

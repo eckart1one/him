@@ -64,10 +64,6 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     $scope.respuesta.id = Preguntas.list();
 
     console.log("local : " + $scope.respuesta.id);
-    // posiblemnte sirva despues
-    // $scope.remove = function(respuesta) {
-    //   Preguntas.remove(respuesta);
-    // };
 
     $scope.actualiza = function(){
       linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
@@ -106,7 +102,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
              console.log("The loading indicator is now displayed");
           });
 
-        $http.post(link, { mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
+        $http.post(link, {matricula : Auten.validar().matricula, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
             $scope.respuesta.id =  $scope.nota.id;
             $scope.respuesta.mensaje =  '';
@@ -150,7 +146,10 @@ app.controller('ChatDetailCtrl', function($scope,Auten, $state,$stateParams, Cha
   $scope.chat = Chats.get($stateParams.chatId);
 });
 
+
+//controlador de datos por cada dia
 app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$state, $location,   $ionicPopover) {
+  //validacion de la sesion    
   if (typeof Auten.validar().matricula != 'undefined') 
     {
       console.log(Auten.validar());
@@ -159,24 +158,27 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
        $state.go('login');
     }
 
-
+    //formateamos la fecha que fue seleccionada
     var fecha = new Date($stateParams.fecha);
-
-var day = fecha.getDate();
-var monthIndex = fecha.getMonth();
-var year = fecha.getFullYear();
-
-console.log(day, monthIndex, year);
-$scope.fecha = day + '/' + monthIndex + '/' + year;
-
-
-
-    $scope.diaDatos = {inicioP: '', finP :  '', relaciones :  '',metodo :  '', sintomas :  '', dia : $scope.fecha  };
+    var day = fecha.getDate();
+    var monthIndex = fecha.getMonth();
+    var year = fecha.getFullYear();
+    
+    $scope.fecha = day + '/' + monthIndex + '/' + year;
+    
+    $scope.diaDatos = DiasFact.get($stateParams.fecha) || {inicioFin:"",relaciones : "" ,  usoMetodo : "", queMetodo :"" ,relaciones :"" , dia : $stateParams.fecha } ;
+    
+//    var dias = angular.fromJson(window.localStorage['dias'] || '[]'); 
+    
+    console.log('diaDatos');    
+    console.log($scope.diaDatos);    
     
     $scope.guardaDia =  function()
     {
-      DiasFact.postt($scope.diaDatos);
-      console.log( DiasFact.gett());
+      
+      DiasFact.post($scope.diaDatos);
+      console.log( DiasFact.all());
+      $state.go('tab.account', {nuevoColor:'uno'}); 
     }
 
     
@@ -203,7 +205,8 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$locati
 
       $state.go('tab.account'); 
     }
-
+    
+    console.log($state.nuevoColor);
 
       // $scope.configuracionDatos = ConfiguracionFact.gett(); 
       // $scope.onezoneDatepicker.highlights = calcularDias($scope.configuracionDatos); 
