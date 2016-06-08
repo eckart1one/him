@@ -1,6 +1,8 @@
 var app = angular.module('starter.controllers', [])
 
-app.controller('DashCtrl', function($scope,$state,Articulos,Auten) {
+app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten) {
+    $scope.articulos = Articulos.all();
+    
     if (typeof Auten.validar().matricula != 'undefined') 
     {
       console.log(Auten.validar());
@@ -9,7 +11,57 @@ app.controller('DashCtrl', function($scope,$state,Articulos,Auten) {
        $state.go('login');
     }
 
-    $scope.articulos = Articulos.all();
+    $scope.CargarNuevosPost =  function()
+    {       
+        var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+        
+        $http.get(urlNuevosArticulos)
+        .success(function(posts){
+            var nuevosArticulos = [];
+            
+            angular.forEach(posts.data,function(post){
+                if(Articulos.get(post.id) == null ){
+                    console.log('entro');
+                    nuevosArticulos.push(post);        
+                }
+            });
+            
+            //guardamos todo los nuevo en local
+            $scope.articulos = nuevosArticulos.concat($scope.articulos);   
+            Articulos.post($scope.articulos);
+            
+            //validamos los articulos que deben ser eliminados
+            var existe = null;
+            angular.forEach(Articulos.all() ,function(articulo){
+
+                for (var i = 0; i < posts.data.length; i++) {
+                    if (posts.data[i].id === parseInt(articulo.id)) {
+                        existe = posts.data[i];
+                    }
+                }
+
+                if(existe == null){
+                    Articulos.remove(articulo.id);
+                }    
+            });
+            
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
+    
+});
+
+app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos) {
+  if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+       
+  $scope.articulo = Articulos.get($stateParams.articuloId);  
+
 });
 
 app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce,$ionicPopup,$ionicLoading) 
@@ -30,10 +82,6 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     $scope.respuesta.id = Preguntas.list();
 
     console.log("local : " + $scope.respuesta.id);
-    // posiblemnte sirva despues
-    // $scope.remove = function(respuesta) {
-    //   Preguntas.remove(respuesta);
-    // };
 
     $scope.actualiza = function(){
       linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
@@ -72,7 +120,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
              console.log("The loading indicator is now displayed");
           });
 
-        $http.post(link, { mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
+        $http.post(link, {matricula : Auten.validar().matricula, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
             $scope.respuesta.id =  $scope.nota.id;
             $scope.respuesta.mensaje =  '';
@@ -116,7 +164,10 @@ app.controller('ChatDetailCtrl', function($scope,Auten, $state,$stateParams, Cha
   $scope.chat = Chats.get($stateParams.chatId);
 });
 
+
+//controlador de datos por cada dia
 app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$state, $location,   $ionicPopover) {
+  //validacion de la sesion    
   if (typeof Auten.validar().matricula != 'undefined') 
     {
       console.log(Auten.validar());
@@ -125,24 +176,27 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
        $state.go('login');
     }
 
-
+    //formateamos la fecha que fue seleccionada
     var fecha = new Date($stateParams.fecha);
-
-var day = fecha.getDate();
-var monthIndex = fecha.getMonth();
-var year = fecha.getFullYear();
-
-console.log(day, monthIndex, year);
-$scope.fecha = day + '/' + monthIndex + '/' + year;
-
-
-
-    $scope.diaDatos = {inicioP: '', finP :  '', relaciones :  '',metodo :  '', sintomas :  '', dia : $scope.fecha  };
+    var day = fecha.getDate();
+    var monthIndex = fecha.getMonth();
+    var year = fecha.getFullYear();
+    
+    $scope.fecha = day + '/' + monthIndex + '/' + year;
+    
+    $scope.diaDatos = DiasFact.get($stateParams.fecha) || {inicioFin:"",relaciones : "" ,  usoMetodo : "", queMetodo :"" ,relaciones :"" , dia : $stateParams.fecha } ;
+    
+//    var dias = angular.fromJson(window.localStorage['dias'] || '[]'); 
+    
+    console.log('diaDatos');    
+    console.log($scope.diaDatos);    
     
     $scope.guardaDia =  function()
     {
-      DiasFact.postt($scope.diaDatos);
-      console.log( DiasFact.gett());
+      
+      DiasFact.post($scope.diaDatos);
+      console.log( DiasFact.all());
+      $state.go('tab.account', {nuevoColor:'uno'}); 
     }
 
     
@@ -169,7 +223,8 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$locati
 
       $state.go('tab.account'); 
     }
-
+    
+    console.log($state.nuevoColor);
 
       // $scope.configuracionDatos = ConfiguracionFact.gett(); 
       // $scope.onezoneDatepicker.highlights = calcularDias($scope.configuracionDatos); 
@@ -389,16 +444,6 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,Auten, $state,$stateParams, Articulos) {
-  if (typeof Auten.validar().matricula != 'undefined') 
-    {
-      console.log(Auten.validar());
-    }
-    else{
-       $state.go('login');
-    }
-  $scope.articulo = Articulos.get($stateParams.articuloId);
-});
 
 
 

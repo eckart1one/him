@@ -64,10 +64,7 @@ app.factory('Preguntas', function(){
               return respuestaId;
           },
         actualiza : function(res){
-           console.log(res);
             respuestaId = res.id;
-            console.log(respuestaId);
-            //notas.push(nota);
             persist();
         }
     };
@@ -90,11 +87,9 @@ app.factory('Articulos', function() {
             return articulos;
         },
         get: function(articuloId){
-            console.log(articuloId);
             for (var i = 0; i < articulos.length; i++) {
                 if (articulos[i].id === parseInt(articuloId)) {
                     return articulos[i];
-                    console.log(articuloId);
                 }
             }
             return null;
@@ -104,7 +99,17 @@ app.factory('Articulos', function() {
             console.log('servicios');
             articulos = art; 
             persist();
-        }
+        },
+        remove: function(id){
+            for(var i = 0 ; i<articulos.length; i++)
+            {
+                if(articulos[i].id === id){
+                    articulos.splice(i,1)
+                    persist();
+                    return;
+                }
+            }
+        },
     };
 });
 

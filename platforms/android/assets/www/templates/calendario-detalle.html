@@ -1,18 +1,22 @@
 <ion-view view-title="{{fecha}}">
     <ion-content>
         <ion-list>
-            <ion-radio ng-model="diaDatos.inicioP" ng-value="'inici'">Inicio Periodo</ion-radio>
-            <ion-radio ng-model="diaDatos.finP" ng-value="'fin'">Fin Periodo</ion-radio>
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'I'">Inicio Mesntruación</ion-radio>
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'F'">Fin Menstruación</ion-radio>
            
             <ion-toggle toggle-class="toggle-assertive" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones">
                     Relaciones Sexuales
             </ion-toggle>
+            
+             <ion-toggle toggle-class="toggle-assertive" ng-model="diaDatos.usoMetodo" ng-checked="diaDatos.usoMetodo" ng-show="diaDatos.relaciones">
+                    Uso de metodo anticonseptivo
+            </ion-toggle>
 
-            <ion-item class="item item-input item-select" ng-show="diaDatos.relaciones">
+            <ion-item class="item item-input item-select"  ng-show="diaDatos.usoMetodo">
                 <div class="input-label">
                   Metodos Anticonceptivos
                 </div>
-                <select ng-model="diaDatos.metodo">
+                <select ng-model="diaDatos.queMetodo">
                     <option >Pastilla del dia siguiente</option>
                     <option >Pastilla anticonseptiva</option>
                     <option >Dolor de cabeza</option>
@@ -22,23 +26,9 @@
                     <option >CHIP</option>
                 </select>
             </ion-item>
-    
-            <ion-item class="item item-input item-select">
-                <div class="input-label">
-                  Sintomas
-                </div>
-                <select ng-model="diaDatos.sintomas">
-                    <option >Vomitos</option>
-                    <option >Colicos</option>
-                    <option >Dolor de cabeza</option>
-                    <option >Antojos</option>
-                    <option >Ascos</option>
-                    <option >Diarrea</option>
-                </select>
-            </ion-item>
         </ion-list>
-
-
+        
+        
          <button id="configuraciN-button11" style="font-weight:600;" class=" button button-positive  button-block " ng-click="guardaDia()">Guardar</button>
     </ion-content>
 </ion-view>
