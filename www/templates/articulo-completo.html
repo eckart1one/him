@@ -3,7 +3,8 @@
     <ion-content class="padding">   
         <div class="list card">
             <div class="item item-body">
-                <img class="full-image" ng-src="{{articulo.images[0].ruta}}">
+                <img ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" >
+
                 <p ng-bind-html="articulo.description"></p>
             </div>
         </div>

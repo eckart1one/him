@@ -1,8 +1,8 @@
 var app = angular.module('starter.controllers', [])
 
-app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten) {
+app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
     $scope.articulos = Articulos.all();
-    
+    console.log($scope.articulos);
     if (typeof Auten.validar().matricula != 'undefined') 
     {
       console.log(Auten.validar());
@@ -49,6 +49,32 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten) {
         });
     };
     
+    
+    //vamos hacer pruebas de file con cordova
+    $scope.testFileDownload = function () {
+      // Function code goes here
+        // File for download
+        var url = "http://www.gajotres.net/wp-content/uploads/2015/04/logo_radni.png";
+
+        // File name only
+        var filename = url.split("/").pop();
+
+    
+        // Save location
+        var targetPath = cordova.file.externalRootDirectory + filename;
+
+        $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+            console.log('Success');
+        }, function (error) {
+            console.log('Error');
+        }, function (progress) {
+            // PROGRESS HANDLING GOES HERE
+        });
+    }
+    $scope.testFileUpload = function () {
+      // Function code goes here
+    }
+
 });
 
 app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos) {

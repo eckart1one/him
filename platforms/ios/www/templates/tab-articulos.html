@@ -1,5 +1,10 @@
-<ion-view view-title="Articulos">
+<ion-view view-title="Blogs">
   <ion-content>
+    <ion-refresher
+        pulling-text="Actualizando..."
+        on-refresh="CargarNuevosPost()">
+    </ion-refresher>
+    
       <div class="bar item-input-inset bar-light">
           <label class="item-input-wrapper">
             <i class="icon ion-search placeholder-icon"></i>
@@ -8,9 +13,9 @@
       </div>   
    <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right item-text-wrap" ng-repeat="articulo in articulos | filter:  busqueda" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
-<img ng-src="{{articulo.imagen}}">
-        <h2>{{articulo.titulo}}</h2>
-        <p>{{articulo.extracto | limitTo : 100 }}{{ articulo.extracto.length > 100 ? '&hellip;' : '' }}</p>
+<img ng-src="{{articulo.images[0].ruta}}" ng-if="articulo.images[0].ruta.indexOf('birdev') === 0" >
+        <h2>{{articulo.title}}</h2>
+        <p ng-bind-html="articulo.description | limitTo : 100"></p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
