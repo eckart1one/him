@@ -19,32 +19,43 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
         .success(function(posts){
             var nuevosArticulos = [];
             
+            
+            
             angular.forEach(posts.data,function(post){
-                if(Articulos.get(post.id) == null ){
-                    console.log('entro');
                     nuevosArticulos.push(post);        
-                }
             });
             
             //guardamos todo los nuevo en local
-            $scope.articulos = nuevosArticulos.concat($scope.articulos);   
+            $scope.articulos = nuevosArticulos;   
             Articulos.post($scope.articulos);
             
-            //validamos los articulos que deben ser eliminados
-            var existe = null;
-            angular.forEach(Articulos.all() ,function(articulo){
-
-                for (var i = 0; i < posts.data.length; i++) {
-                    if (posts.data[i].id === parseInt(articulo.id)) {
-                        existe = posts.data[i];
-                    }
-                }
-
-                if(existe == null){
-                    Articulos.remove(articulo.id);
-                }    
-            });
             
+//            angular.forEach(posts.data,function(post){
+//                if(Articulos.get(post.id) == null ){
+//                    console.log('entro');
+//                    nuevosArticulos.push(post);        
+//                }
+//            });
+//            
+//            //guardamos todo los nuevo en local
+//            $scope.articulos = nuevosArticulos.concat($scope.articulos);   
+//            Articulos.post($scope.articulos);
+            
+            //validamos los articulos que deben ser eliminados
+//            var existe = null;
+//            angular.forEach(Articulos.all() ,function(articulo){
+//
+//                for (var i = 0; i < posts.data.length; i++) {
+//                    if (posts.data[i].id === parseInt(articulo.id)) {
+//                        existe = posts.data[i];
+//                    }
+//                }
+//
+//                if(existe == null){
+//                    Articulos.remove(articulo.id);
+//                }    
+//            });
+//            
             $scope.$broadcast('scroll.refreshComplete');
         });
     };
