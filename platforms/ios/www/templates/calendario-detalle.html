@@ -1,46 +1,34 @@
 <ion-view view-title="{{fecha}}">
     <ion-content>
         <ion-list>
-            <ion-radio ng-model="choice" ng-value="'inici'">Inicio Periodo</ion-radio>
-            <ion-radio ng-model="choice" ng-value="'fin'">Fin Periodo</ion-radio>
-            <ion-item class="item-toggle">
-                 Relaciones Sexuales
-                 <label class="toggle toggle-assertive">
-                   <input type="checkbox">
-                   <div class="track">
-                     <div class="handle"></div>
-                   </div>
-                 </label>
-            </ion-item>
-    
-            <ion-item class="item item-input item-select">
-                <div class="input-label">
-                  Sintomas
-                </div>
-                <select multiple>
-                    <option ng-model="filter.yellow">Vomitos</option>
-                    <option ng-model="filter.yellow">Colicos</option>
-                    <option ng-model="filter.pink">Dolor de cabeza</option>
-                    <option ng-model="filter.uno">Antojos</option>
-                    <option ng-model="filter.dos">Ascos</option>
-                    <option ng-model="filter.tres">Diarrea</option>
-                </select>
-            </ion-item>
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'I'">Inicio Mesntruación</ion-radio>
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'F'">Fin Menstruación</ion-radio>
+           
+            <ion-toggle toggle-class="toggle-assertive" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones">
+                    Relaciones Sexuales
+            </ion-toggle>
+            
+             <ion-toggle toggle-class="toggle-assertive" ng-model="diaDatos.usoMetodo" ng-checked="diaDatos.usoMetodo" ng-show="diaDatos.relaciones">
+                    Uso de metodo anticonseptivo
+            </ion-toggle>
 
-            <ion-item class="item item-input item-select">
+            <ion-item class="item item-input item-select"  ng-show="diaDatos.usoMetodo">
                 <div class="input-label">
                   Metodos Anticonceptivos
                 </div>
-                <select multiple>
-                    <option ng-model="filter.yellow">Pastilla del dia siguiente</option>
-                    <option ng-model="filter.yellow">Pastilla anticonseptiva</option>
-                    <option ng-model="filter.pink">Dolor de cabeza</option>
-                    <option ng-model="filter.uno">Condon</option>
-                    <option ng-model="filter.dos">Parche</option>
-                    <option ng-model="filter.tres">DIU</option>
-                    <option ng-model="filter.tres">CHIP</option>
+                <select ng-model="diaDatos.queMetodo">
+                    <option >Pastilla del dia siguiente</option>
+                    <option >Pastilla anticonseptiva</option>
+                    <option >Dolor de cabeza</option>
+                    <option >Condon</option>
+                    <option >Parche</option>
+                    <option >DIU</option>
+                    <option >CHIP</option>
                 </select>
             </ion-item>
         </ion-list>
+        
+        
+         <button id="configuraciN-button11" style="font-weight:600;" class=" button button-positive  button-block " ng-click="guardaDia()">Guardar</button>
     </ion-content>
 </ion-view>

@@ -4,11 +4,11 @@
             <ion-radio ng-model="diaDatos.inicioFin" ng-value="'I'">Inicio Mesntruación</ion-radio>
             <ion-radio ng-model="diaDatos.inicioFin" ng-value="'F'">Fin Menstruación</ion-radio>
            
-            <ion-toggle toggle-class="toggle-assertive" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones">
+            <ion-toggle toggle-class="toggle-royal" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones">
                     Relaciones Sexuales
             </ion-toggle>
             
-             <ion-toggle toggle-class="toggle-assertive" ng-model="diaDatos.usoMetodo" ng-checked="diaDatos.usoMetodo" ng-show="diaDatos.relaciones">
+             <ion-toggle toggle-class="toggle-royal" ng-model="diaDatos.usoMetodo" ng-checked="diaDatos.usoMetodo" ng-show="diaDatos.relaciones">
                     Uso de metodo anticonseptivo
             </ion-toggle>
 
@@ -29,6 +29,6 @@
         </ion-list>
         
         
-         <button id="configuraciN-button11" style="font-weight:600;" class=" button button-positive  button-block " ng-click="guardaDia()">Guardar</button>
+         <button id="configuraciN-button11" style="font-weight:600;" class=" button button-royal  button-block " ng-click="guardaDia()">Guardar</button>
     </ion-content>
 </ion-view>

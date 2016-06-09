@@ -1,11 +1,78 @@
 var app = angular.module('starter.controllers', [])
 
-app.controller('DashCtrl', function($scope,Articulos) {
+app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten) {
     $scope.articulos = Articulos.all();
+    console.log($scope.articulos);
+    if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+
+    $scope.CargarNuevosPost =  function()
+    {       
+        var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+        
+        $http.get(urlNuevosArticulos)
+        .success(function(posts){
+            var nuevosArticulos = [];
+            
+            angular.forEach(posts.data,function(post){
+                if(Articulos.get(post.id) == null ){
+                    console.log('entro');
+                    nuevosArticulos.push(post);        
+                }
+            });
+            
+            //guardamos todo los nuevo en local
+            $scope.articulos = nuevosArticulos.concat($scope.articulos);   
+            Articulos.post($scope.articulos);
+            
+            //validamos los articulos que deben ser eliminados
+            var existe = null;
+            angular.forEach(Articulos.all() ,function(articulo){
+
+                for (var i = 0; i < posts.data.length; i++) {
+                    if (posts.data[i].id === parseInt(articulo.id)) {
+                        existe = posts.data[i];
+                    }
+                }
+
+                if(existe == null){
+                    Articulos.remove(articulo.id);
+                }    
+            });
+            
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
+    
 });
 
-app.controller('ChatsCtrl', function($scope, Preguntas ,$http,$sce,$ionicPopup,$ionicLoading) 
+app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos) {
+  if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+       
+  $scope.articulo = Articulos.get($stateParams.articuloId);  
+
+});
+
+app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce,$ionicPopup,$ionicLoading) 
 {  
+    if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
     //constantes y cosas que se tienen que inicializar para el modulo
     $scope.nota =  {id: '', mensaje:''};
     $scope.respuesta = {id:'' , mensaje: ''};
@@ -15,10 +82,6 @@ app.controller('ChatsCtrl', function($scope, Preguntas ,$http,$sce,$ionicPopup,$
     $scope.respuesta.id = Preguntas.list();
 
     console.log("local : " + $scope.respuesta.id);
-    // posiblemnte sirva despues
-    // $scope.remove = function(respuesta) {
-    //   Preguntas.remove(respuesta);
-    // };
 
     $scope.actualiza = function(){
       linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
@@ -57,7 +120,7 @@ app.controller('ChatsCtrl', function($scope, Preguntas ,$http,$sce,$ionicPopup,$
              console.log("The loading indicator is now displayed");
           });
 
-        $http.post(link, { mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
+        $http.post(link, {matricula : Auten.validar().matricula, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
             $scope.respuesta.id =  $scope.nota.id;
             $scope.respuesta.mensaje =  '';
@@ -90,16 +153,86 @@ app.controller('ChatsCtrl', function($scope, Preguntas ,$http,$sce,$ionicPopup,$
 });
 
 
-app.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
+app.controller('ChatDetailCtrl', function($scope,Auten, $state,$stateParams, Chats) {
+  if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
   $scope.chat = Chats.get($stateParams.chatId);
 });
 
-app.controller('DiaCtrl', function($scope,$state,$stateParams, $location,   $ionicPopover) {
-    $scope.fecha = new Date($stateParams.fecha);
+
+//controlador de datos por cada dia
+app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$state, $location,   $ionicPopover) {
+  //validacion de la sesion    
+  if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+
+    //formateamos la fecha que fue seleccionada
+    var fecha = new Date($stateParams.fecha);
+    var day = fecha.getDate();
+    var monthIndex = fecha.getMonth();
+    var year = fecha.getFullYear();
+    
+    $scope.fecha = day + '/' + monthIndex + '/' + year;
+    
+    $scope.diaDatos = DiasFact.get($stateParams.fecha) || {inicioFin:"",relaciones : "" ,  usoMetodo : "", queMetodo :"" ,relaciones :"" , dia : $stateParams.fecha } ;
+    
+//    var dias = angular.fromJson(window.localStorage['dias'] || '[]'); 
+    
+    console.log('diaDatos');    
+    console.log($scope.diaDatos);    
+    
+    $scope.guardaDia =  function()
+    {
+      
+      DiasFact.post($scope.diaDatos);
+      console.log( DiasFact.all());
+      $state.go('tab.account', {nuevoColor:'uno'}); 
+    }
+
+    
 });
 
-app.controller('AccountCtrl', function($scope,$state, $location) {
+app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact,$ionicHistory) {
+    if (typeof Auten.validar().matricula != 'undefined') 
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
     
+    if( typeof ConfiguracionFact.gett().inicio == 'undefined')
+    {
+      $scope.configuracionDatos = {inicio : '' ,peso: '', altura :  '',duraP :  '',duraS :  '', anti :  '' };
+      $scope.calculo = []; 
+    }else{
+    
+      $scope.configuracionDatos = ConfiguracionFact.gett();
+      $scope.configuracionDatos.inicio = new Date($scope.configuracionDatos.inicio); 
+      $scope.calculo = calcularDias($scope.configuracionDatos); 
+
+      $state.go('tab.account'); 
+    }
+    
+    console.log($state.nuevoColor);
+
+      // $scope.configuracionDatos = ConfiguracionFact.gett(); 
+      // $scope.onezoneDatepicker.highlights = calcularDias($scope.configuracionDatos); 
+
+    // creacion de variables 
+     
+
+
         //crea el objeto para el datepiker
 //  $scope.onezoneDatepicker = {
 //    date: date, // MANDATORY                     
@@ -123,10 +256,32 @@ app.controller('AccountCtrl', function($scope,$state, $location) {
 //        // your code
 //    }
 //};
-    
+var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
+
+
+// var hi = [
+//     {
+//         date: new Date('Sun Jun 06 2016 00:00:00 GMT-0500 (CDT)'),
+//         color: '#8FD4D9',
+//         textColor: '#fff'
+//     },
+//     {
+//         date: new Date(2016, 5, 18)
+//     },
+//     {
+//         date: new Date(2016, 5, 19)
+//     },
+//     {
+//         date: new Date(2016, 5, 20)
+//     }
+// ];
+
     $scope.onezoneDatepicker = {
     date: new Date(),  
-    mondayFirst: false,                   
+    mondayFirst: false,   
+    months: meses,        
+    daysOfTheWeek: dias,             
     disablePastDays: false,
     disableSwipe: true,
     disableWeekend: false,
@@ -135,43 +290,224 @@ app.controller('AccountCtrl', function($scope,$state, $location) {
     calendarMode: true,
     hideCancelButton: false,
     hideSetButton: false,
-    highlights:  [
-    {
-        date: new Date(2016, 4, 30),
-        color: '#8FD4D9',
-        textColor: '#fff'
-    },
-    {
-        date: new Date(2016, 1, 18)
-    },
-    {
-        date: new Date(2016, 1, 19)
-    },
-    {
-        date: new Date(2016, 1, 20)
-    }
-],
+    highlights:  $scope.calculo,
 
     callback: function(value){
         console.log(value);
         pulsado(value);
     }
 };
+
+    $scope.irCalendario = function(){
+      $state.go('tab.account'); 
+    }
+
+    $scope.configuracion =  function(){
+      $state.go('tab.configuracion-calendario'); 
+
+      console.log('*************  hacer ***************')
+    }
+
+    $scope.guardaConfiguracion = function(){
+      console.log('vamos a guardar');
+      console.log($scope.configuracionDatos);
+      ConfiguracionFact.postt($scope.configuracionDatos);
+
+       // $ionicHistory.nextViewOptions({
+       //  disableBack: true
+       // });
+       $state.go('tab.account'); 
+    }
     
     function pulsado(fecha)
     {
-        $scope.onezoneDatepicker.highlights = [{
-            date: fecha,
-            color: '#8FD4D9',
-            textColor: '#fff'
-            }];
-        
-        //  $location.path('/dia',{fecha : fecha}) 
+      // var nuevo  = { date: fecha, color: '#8FD4D9', textColor: '#fff'};
+      // hi.push(nuevo);
+      // console.log(hi)
+      // $scope.onezoneDatepicker.highlights = hi;
+        // $scope.onezoneDatepicker.highlights = [{
+        //     date: fecha,
+        //     color: '#8FD4D9',
+        //     textColor: '#fff'
+        //     }];
         $state.go('tab.calendario-detalle',{fecha : fecha}); 
     }
 
+
+      var periodCycleDays ;
+      var bleedingDays ;
+      var fertilePhaseStart;
+      var fertilePhaseEnd ;
+      var ovulation ;
+
+      var periodStartDate = new Date();
+
+
+
+    function calcularDias(parametros)
+    {
+      
+      periodCycleDays = parametros.duraP;
+      bleedingDays = parametros.duraS;
+      fertilePhaseStart = periodCycleDays - 20;
+      fertilePhaseEnd = periodCycleDays - 11;
+      ovulation = (fertilePhaseStart-1) + (fertilePhaseEnd - fertilePhaseStart)/2;
+
+      periodStartDate = new Date(parametros.inicio);
+
+      InitialEvents = createEventsForDate(periodStartDate);
+
+      console.log(InitialEvents);
+
+
+      return diasPintados(InitialEvents);
+    }
+
+    function createEventsForDate(date){
+      var timeBetween = Math.abs((date.getTime()) - (periodStartDate.getTime()));
+      var daysBetween = Math.ceil(timeBetween / (1000 * 3600 * 24)); 
+      var cyclesBetween = Math.floor((daysBetween / periodCycleDays));
+      var events = [];
+      // Create next two events to handle multiple sets within one month
+      for(var i=0;i<6;i++){
+        var cycleDaysBetween = periodCycleDays * (cyclesBetween + i);
+        var p = addDays(periodStartDate, cycleDaysBetween);
+        var bleedingEnd = addDays(p, bleedingDays);
+        var fertilePhaseStartDate = addDays(p, fertilePhaseStart);
+        var fertilePhaseEndDate = addDays(p, fertilePhaseEnd);
+        var ovulationDayStart = addDays(p, ovulation)
+        var ovulationDayEnd = new Date(new Date(ovulationDayStart).setHours(23,59,59,999));
+        events.push({
+          "summary": "Period",
+          "begin": p,
+          "end": bleedingEnd 
+        });
+        events.push({
+          "summary": "Fertile",
+          "begin": fertilePhaseStartDate,
+          "end": fertilePhaseEndDate 
+        });
+        events.push({
+          "summary": "Ovulation",
+          "begin": ovulationDayStart,
+          "end": ovulationDayEnd
+        });
+      }
+      return events;
+    }
+
+    function addDays(date, days){
+      var d = new Date(date.valueOf());
+      d.setDate(d.getDate() + days)
+      d.setHours(0,0,0,0);  // set to start of day
+      return d;
+    }
+
+    function diasPintados(InitialEvents){
+      var fechaParaPintar = [];
+
+      InitialEvents.forEach(function(eventos)
+      {
+        // var desc = Object.getOwnPropertyDescriptor(o, name);
+        // Object.defineProperty(copy, name, desc);
+        //console.log(eventos.begin);
+        
+        var inicio = eventos.begin.getTime();
+        var fin = eventos.end.getTime();
+
+         console.log(inicio+' : '+fin);
+        for (var i = inicio; i < fin; i = i + 86400000) {
+
+          if(eventos.summary == "Period"){
+            var temp = { date: new Date(i),color: '#c61810',textColor: '#fff'};
+            fechaParaPintar.push(temp);
+          }
+          if(eventos.summary == "Fertile"){
+            var temp = {date: new Date(i),color: '#336633',textColor: '#fff'};
+            fechaParaPintar.push(temp);
+          }
+          if(eventos.summary == "Ovulation"){
+            var temp = {date: new Date(i),color: '#339cf7',textColor: '#fff'};
+            fechaParaPintar.push(temp);
+          }  
+        }
+
+      });
+
+
+      return fechaParaPintar;
+
+    }
+
+
+
+
 });
 
-app.controller('articuloCompletoCtrl', function($scope, $stateParams, Articulos) {
-  $scope.articulo = Articulos.get($stateParams.articuloId);
+
+
+
+app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$state){
+    //console.log(Auten.valida());
+    if (typeof Auten.validar().matricula != 'undefined') 
+    {
+       $state.go('tab.articulos');
+    }
+   
+
+  $scope.aut = {matricula: '', pass :  '' };
+  // $scope.nota =  {id: '', mensaje:''};
+
+  $scope.validar =  function(){
+    var url  = 'http://www.birdev.mx/message_app/public/user';
+
+      $http.post(url, { matricula : $scope.aut.matricula, password: $scope.aut.pass })
+           .then(function successCallback(response) 
+           {
+
+              
+            if(response.data.mensaje == -1)
+            {
+              accesoError();
+            }
+            else if(response.data.mensaje == 0)
+            {
+              accesoError();
+            }
+            else
+            {
+                Auten.crearSesion($scope.aut);
+
+                $state.go('tab.articulos');
+            }
+
+        },function errorCallback(response) {
+            accesoError();
+        });
+  }
+
+
+  function accesoError(){
+    var alertPopup = $ionicPopup.alert({
+       title: 'Oh no!!',
+       template: 'La matricula o Contraseña son icorrectas :('
+     });
+  }
+
+
+  
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
