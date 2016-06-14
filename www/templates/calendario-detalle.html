@@ -1,34 +1,33 @@
 <ion-view view-title="{{fecha}}">
     <ion-content>
         <ion-list>
-            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'I'">Inicio Mesntruación</ion-radio>
-            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'F'">Fin Menstruación</ion-radio>
-           
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'I'">Inicio menstruación</ion-radio>
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'F'">Fin menstruación</ion-radio>
+
             <ion-toggle toggle-class="toggle-royal" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones">
-                    Relaciones Sexuales
+                    Relaciones sexuales
             </ion-toggle>
-            
+
              <ion-toggle toggle-class="toggle-royal" ng-model="diaDatos.usoMetodo" ng-checked="diaDatos.usoMetodo" ng-show="diaDatos.relaciones">
-                    Uso de metodo anticonseptivo
+                    Uso de método anticonceptivo
             </ion-toggle>
 
             <ion-item class="item item-input item-select"  ng-show="diaDatos.usoMetodo">
                 <div class="input-label">
-                  Metodos Anticonceptivos
+                  Métodos anticonceptivos
                 </div>
                 <select ng-model="diaDatos.queMetodo">
-                    <option >Pastilla del dia siguiente</option>
-                    <option >Pastilla anticonseptiva</option>
-                    <option >Dolor de cabeza</option>
-                    <option >Condon</option>
+                    <option >Pastilla del día siguiente</option>
+                    <option >Pastilla anticonceptiva</option>
+                    <option >Condón</option>
                     <option >Parche</option>
                     <option >DIU</option>
-                    <option >CHIP</option>
+                    <option >Chip</option>
                 </select>
             </ion-item>
         </ion-list>
-        
-        
+
+
          <button id="configuraciN-button11" style="font-weight:600;" class=" button button-royal  button-block " ng-click="guardaDia()">Guardar</button>
     </ion-content>
 </ion-view>
