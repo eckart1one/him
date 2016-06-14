@@ -18,5 +18,27 @@
     margin-left: auto;
     margin-right: auto;
     display: block;
-    padding-top: 30px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.color{
+  height: 50px;
+  width: 50px;
+  background-color: yellow;
+  border-radius: 25px;
+  float: left;
+  margin-right: 20px;
+}
+.rojo{
+  background-color: #DA0203;
+}
+
+.amarillo{
+  color: #FBD504;
+}
+
+.rayas{
+  color : black !important;
+  background: repeating-linear-gradient(45deg, #fff, #fff 5px, red 5px, red 10px) !important;
 }
