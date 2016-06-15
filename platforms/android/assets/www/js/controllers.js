@@ -2,8 +2,8 @@ var app = angular.module('starter.controllers', [])
 
 app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
     $scope.articulos = Articulos.all();
-    console.log($scope.articulos);
-    if (typeof Auten.validar().matricula != 'undefined') 
+
+    if (typeof Auten.validar().matricula != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -12,35 +12,35 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
     }
 
     $scope.CargarNuevosPost =  function()
-    {       
+    {
         var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
-        
+
         $http.get(urlNuevosArticulos)
         .success(function(posts){
             var nuevosArticulos = [];
-            
-            
-            
+
+
+
             angular.forEach(posts.data,function(post){
-                    nuevosArticulos.push(post);        
+                    nuevosArticulos.push(post);
             });
-            
+
             //guardamos todo los nuevo en local
-            $scope.articulos = nuevosArticulos;   
+            $scope.articulos = nuevosArticulos;
             Articulos.post($scope.articulos);
-            
-            
+
+
 //            angular.forEach(posts.data,function(post){
 //                if(Articulos.get(post.id) == null ){
 //                    console.log('entro');
-//                    nuevosArticulos.push(post);        
+//                    nuevosArticulos.push(post);
 //                }
 //            });
-//            
+//
 //            //guardamos todo los nuevo en local
-//            $scope.articulos = nuevosArticulos.concat($scope.articulos);   
+//            $scope.articulos = nuevosArticulos.concat($scope.articulos);
 //            Articulos.post($scope.articulos);
-            
+
             //validamos los articulos que deben ser eliminados
 //            var existe = null;
 //            angular.forEach(Articulos.all() ,function(articulo){
@@ -53,22 +53,22 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
 //
 //                if(existe == null){
 //                    Articulos.remove(articulo.id);
-//                }    
+//                }
 //            });
-//            
+//
             $scope.$broadcast('scroll.refreshComplete');
         });
     };
-    
-    
+
+
     //vamos hacer pruebas de file con cordova
-    
-    
-    
- 
+
+
+
+
 
  function testFileDownload(url) {
-  
+
   //utilidad para saber que plataforma estamos trabajando
   var deviceInformation = ionic.Platform.device();
   var isWebView = ionic.Platform.isWebView();
@@ -79,14 +79,14 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
   var currentPlatform = ionic.Platform.platform();
   var currentPlatformVersion = ionic.Platform.version();
 
- 
+
     console.log(deviceInformation);
     console.log(isAndroid);
     console.log(isWebView);
     console.log(isIOS);
     console.log(isIPad);
-     
-     
+
+
       // Function code goes here
         // File for download
         var url = "http://www.gajotres.net/wp-content/uploads/2015/04/logo_radni.png";
@@ -94,7 +94,7 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
         // File name only
         var filename = url.split("/").pop();
 
-    
+
         // Save location
         var targetPath = cordova.file.externalRootDirectory + filename;
 
@@ -106,26 +106,26 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
             // PROGRESS HANDLING GOES HERE
         });
     }
-   
+
 
 });
 
 app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos) {
-  if (typeof Auten.validar().matricula != 'undefined') 
+  if (typeof Auten.validar().matricula != 'undefined')
     {
       console.log(Auten.validar());
     }
     else{
        $state.go('login');
     }
-       
-  $scope.articulo = Articulos.get($stateParams.articuloId);  
+
+  $scope.articulo = Articulos.get($stateParams.articuloId);
 
 });
 
-app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce,$ionicPopup,$ionicLoading) 
-{  
-    if (typeof Auten.validar().matricula != 'undefined') 
+app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce,$ionicPopup,$ionicLoading)
+{
+    if (typeof Auten.validar().matricula != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -153,10 +153,10 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             //tenemos que elimiara el id o ponerlo vacio
            $scope.respuesta.id = '';
            Preguntas.actualiza( $scope.respuesta);
-          
-          
+
+
            $scope.$broadcast('scroll.refreshComplete');
-           
+
         },function errorCallback(response) {
            var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
@@ -169,7 +169,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     }
 
     $scope.enviar =  function()
-    {  
+    {
         //creamos el ide unico
         $scope.nota.id =  new Date().getTime().toString();
 
@@ -185,7 +185,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             $scope.respuesta.mensaje =  '';
             $scope.nota.id = '';
             $scope.nota.mensaje = '';
-            
+
             console.log("primer consol : " + $scope.respuesta.id);
 
             Preguntas.actualiza($scope.respuesta);
@@ -208,12 +208,12 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
              console.log('Thank you for not eating my delicious ice cream cone');
            });
         });
-    };  
+    };
 });
 
 
 app.controller('ChatDetailCtrl', function($scope,Auten, $state,$stateParams, Chats) {
-  if (typeof Auten.validar().matricula != 'undefined') 
+  if (typeof Auten.validar().matricula != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -226,8 +226,8 @@ app.controller('ChatDetailCtrl', function($scope,Auten, $state,$stateParams, Cha
 
 //controlador de datos por cada dia
 app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$state, $location,   $ionicPopover) {
-  //validacion de la sesion    
-  if (typeof Auten.validar().matricula != 'undefined') 
+  //validacion de la sesion
+  if (typeof Auten.validar().matricula != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -240,66 +240,69 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
     var day = fecha.getDate();
     var monthIndex = fecha.getMonth();
     var year = fecha.getFullYear();
-    
+
     $scope.fecha = day + '/' + monthIndex + '/' + year;
-    
+
     $scope.diaDatos = DiasFact.get($stateParams.fecha) || {inicioFin:"",relaciones : "" ,  usoMetodo : "", queMetodo :"" ,relaciones :"" , dia : $stateParams.fecha } ;
-    
-//    var dias = angular.fromJson(window.localStorage['dias'] || '[]'); 
-    
-    console.log('diaDatos');    
-    console.log($scope.diaDatos);    
-    
+
+//    var dias = angular.fromJson(window.localStorage['dias'] || '[]');
+
+    console.log('diaDatos');
+    console.log($scope.diaDatos);
+
     $scope.guardaDia =  function()
     {
-      
       DiasFact.post($scope.diaDatos);
       console.log( DiasFact.all());
-      $state.go('tab.account', {nuevoColor:'uno'}); 
+      var temp = {date: new Date(fecha),color: '#000',textColor: '#fff'};
+      // console.log($scope.cal);
+      // $scope.calculo.push(temp);
+      $state.go('tab.account', {nuevoColor:'uno'});
     }
 
-    
+
 });
 
 app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact,$ionicHistory) {
-    if (typeof Auten.validar().matricula != 'undefined') 
+    if (typeof Auten.validar().matricula != 'undefined')
     {
       console.log(Auten.validar());
     }
     else{
        $state.go('login');
     }
-    
+
     if( typeof ConfiguracionFact.gett().inicio == 'undefined')
     {
       $scope.configuracionDatos = {inicio : '' ,peso: '', altura :  '',duraP :  '',duraS :  '', anti :  '' };
-      $scope.calculo = []; 
+      $scope.calculo = [];
     }else{
-    
-      $scope.configuracionDatos = ConfiguracionFact.gett();
-      $scope.configuracionDatos.inicio = new Date($scope.configuracionDatos.inicio); 
-      $scope.calculo = calcularDias($scope.configuracionDatos); 
 
-      $state.go('tab.account'); 
+      $scope.configuracionDatos = ConfiguracionFact.gett();
+      $scope.configuracionDatos.inicio = new Date($scope.configuracionDatos.inicio);
+      var alrevez = calcularDias($scope.configuracionDatos);
+      $scope.calculo = alrevez.reverse();
+
+      $state.go('tab.account');
     }
-    
+
     console.log($state.nuevoColor);
 
-      // $scope.configuracionDatos = ConfiguracionFact.gett(); 
-      // $scope.onezoneDatepicker.highlights = calcularDias($scope.configuracionDatos); 
+      // $scope.configuracionDatos = ConfiguracionFact.gett();
+      // $scope.onezoneDatepicker.highlights = calcularDias($scope.configuracionDatos);
 
-    // creacion de variables 
-     
+    // creacion de variables
+
 
 
         //crea el objeto para el datepiker
 //  $scope.onezoneDatepicker = {
-//    date: date, // MANDATORY                     
-//    mondayFirst: false,                
-//    months: months,                    
-//    daysOfTheWeek: daysOfTheWeek,     
-//    startDate: startDate,             
-//    endDate: endDate,                    
+//    date: date, // MANDATORY
+//    mondayFirst: false,
+//    months: months,
+//    daysOfTheWeek: daysOfTheWeek,
+//    startDate: startDate,
+//    endDate: endDate,
 //    disablePastDays: false,
 //    disableSwipe: false,
 //    disableWeekend: false,
@@ -337,10 +340,10 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 // ];
 
     $scope.onezoneDatepicker = {
-    date: new Date(),  
-    mondayFirst: false,   
-    months: meses,        
-    daysOfTheWeek: dias,             
+    date: new Date(),
+    mondayFirst: false,
+    months: meses,
+    daysOfTheWeek: dias,
     disablePastDays: false,
     disableSwipe: true,
     disableWeekend: false,
@@ -358,11 +361,11 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 };
 
     $scope.irCalendario = function(){
-      $state.go('tab.account'); 
+      $state.go('tab.account');
     }
 
     $scope.configuracion =  function(){
-      $state.go('tab.configuracion-calendario'); 
+      $state.go('tab.configuracion-calendario');
 
       console.log('*************  hacer ***************')
     }
@@ -375,9 +378,9 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
        // $ionicHistory.nextViewOptions({
        //  disableBack: true
        // });
-       $state.go('tab.account'); 
+       $state.go('tab.account');
     }
-    
+
     function pulsado(fecha)
     {
       // var nuevo  = { date: fecha, color: '#8FD4D9', textColor: '#fff'};
@@ -389,7 +392,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
         //     color: '#8FD4D9',
         //     textColor: '#fff'
         //     }];
-        $state.go('tab.calendario-detalle',{fecha : fecha}); 
+        $state.go('tab.calendario-detalle',{fecha : fecha});
     }
 
 
@@ -405,7 +408,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
     function calcularDias(parametros)
     {
-      
+
       periodCycleDays = parametros.duraP;
       bleedingDays = parametros.duraS;
       fertilePhaseStart = periodCycleDays - 20;
@@ -424,11 +427,11 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
     function createEventsForDate(date){
       var timeBetween = Math.abs((date.getTime()) - (periodStartDate.getTime()));
-      var daysBetween = Math.ceil(timeBetween / (1000 * 3600 * 24)); 
+      var daysBetween = Math.ceil(timeBetween / (1000 * 3600 * 24));
       var cyclesBetween = Math.floor((daysBetween / periodCycleDays));
       var events = [];
       // Create next two events to handle multiple sets within one month
-      for(var i=0;i<6;i++){
+      for(var i=0;i<12;i++){
         var cycleDaysBetween = periodCycleDays * (cyclesBetween + i);
         var p = addDays(periodStartDate, cycleDaysBetween);
         var bleedingEnd = addDays(p, bleedingDays);
@@ -439,12 +442,12 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
         events.push({
           "summary": "Period",
           "begin": p,
-          "end": bleedingEnd 
+          "end": bleedingEnd
         });
         events.push({
           "summary": "Fertile",
           "begin": fertilePhaseStartDate,
-          "end": fertilePhaseEndDate 
+          "end": fertilePhaseEndDate
         });
         events.push({
           "summary": "Ovulation",
@@ -462,6 +465,10 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
       return d;
     }
 
+
+    //background: repeating-linear-gradient(45deg,transparent,transparent 10px,#ccc 10px,#ccc 20px), linear-gradient( to bottom,#eee,#999);
+
+  //  background: repeating-linear-gradient(45deg,#606dbc,#606dbc 10px,#465298 10px,#465298 20px);
     function diasPintados(InitialEvents){
       var fechaParaPintar = [];
 
@@ -470,25 +477,29 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
         // var desc = Object.getOwnPropertyDescriptor(o, name);
         // Object.defineProperty(copy, name, desc);
         //console.log(eventos.begin);
-        
+
         var inicio = eventos.begin.getTime();
         var fin = eventos.end.getTime();
 
-         console.log(inicio+' : '+fin);
+
         for (var i = inicio; i < fin; i = i + 86400000) {
 
           if(eventos.summary == "Period"){
-            var temp = { date: new Date(i),color: '#c61810',textColor: '#fff'};
+            var temp = { date: new Date(i),color: 'red',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }
           if(eventos.summary == "Fertile"){
-            var temp = {date: new Date(i),color: '#336633',textColor: '#fff'};
+            var temp = {date: new Date(i),color: '#FBD504',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }
           if(eventos.summary == "Ovulation"){
-            var temp = {date: new Date(i),color: '#339cf7',textColor: '#fff'};
+            var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
             fechaParaPintar.push(temp);
-          }  
+            var temp = {date: new Date(i+86400000),color: '#DA0203',textColor: '#fff'};
+            fechaParaPintar.push(temp);
+            var temp = {date: new Date(i+86400000+86400000),color: '#DA0203',textColor: '#fff'};
+            fechaParaPintar.push(temp);//86400000
+          }
         }
 
       });
@@ -508,11 +519,11 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
 app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$state){
     //console.log(Auten.valida());
-    if (typeof Auten.validar().matricula != 'undefined') 
+    if (typeof Auten.validar().matricula != 'undefined')
     {
        $state.go('tab.articulos');
     }
-   
+
 
   $scope.aut = {matricula: '', pass :  '' };
   // $scope.nota =  {id: '', mensaje:''};
@@ -521,10 +532,10 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
     var url  = 'http://www.birdev.mx/message_app/public/user';
 
       $http.post(url, { matricula : $scope.aut.matricula, password: $scope.aut.pass })
-           .then(function successCallback(response) 
+           .then(function successCallback(response)
            {
 
-              
+
             if(response.data.mensaje == -1)
             {
               accesoError();
@@ -554,19 +565,5 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
   }
 
 
-  
+
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
