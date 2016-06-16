@@ -62,50 +62,45 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
 
 
     //vamos hacer pruebas de file con cordova
-
-
-
-
-
- function testFileDownload(url) {
-
-  //utilidad para saber que plataforma estamos trabajando
-  var deviceInformation = ionic.Platform.device();
-  var isWebView = ionic.Platform.isWebView();
-  var isIPad = ionic.Platform.isIPad();
-  var isIOS = ionic.Platform.isIOS();
-  var isAndroid = ionic.Platform.isAndroid();
-  var isWindowsPhone = ionic.Platform.isWindowsPhone();
-  var currentPlatform = ionic.Platform.platform();
-  var currentPlatformVersion = ionic.Platform.version();
-
-
-    console.log(deviceInformation);
-    console.log(isAndroid);
-    console.log(isWebView);
-    console.log(isIOS);
-    console.log(isIPad);
-
-
-      // Function code goes here
-        // File for download
-        var url = "http://www.gajotres.net/wp-content/uploads/2015/04/logo_radni.png";
-
-        // File name only
-        var filename = url.split("/").pop();
-
-
-        // Save location
-        var targetPath = cordova.file.externalRootDirectory + filename;
-
-        $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
-            console.log('Success');
-        }, function (error) {
-            console.log('Error');
-        }, function (progress) {
-            // PROGRESS HANDLING GOES HERE
-        });
-    }
+ // function testFileDownload(url) {
+ //
+ //  //utilidad para saber que plataforma estamos trabajando
+ //  var deviceInformation = ionic.Platform.device();
+ //  var isWebView = ionic.Platform.isWebView();
+ //  var isIPad = ionic.Platform.isIPad();
+ //  var isIOS = ionic.Platform.isIOS();
+ //  var isAndroid = ionic.Platform.isAndroid();
+ //  var isWindowsPhone = ionic.Platform.isWindowsPhone();
+ //  var currentPlatform = ionic.Platform.platform();
+ //  var currentPlatformVersion = ionic.Platform.version();
+ //
+ //
+ //    console.log(deviceInformation);
+ //    console.log(isAndroid);
+ //    console.log(isWebView);
+ //    console.log(isIOS);
+ //    console.log(isIPad);
+ //
+ //
+ //        // Function code goes here
+ //        // File for download
+ //        var url = "http://www.gajotres.net/wp-content/uploads/2015/04/logo_radni.png";
+ //
+ //        // File name only
+ //        var filename = url.split("/").pop();
+ //
+ //
+ //        // Save location
+ //        var targetPath = cordova.file.externalRootDirectory + filename;
+ //
+ //        $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+ //            console.log('Success');
+ //        }, function (error) {
+ //            console.log('Error');
+ //        }, function (progress) {
+ //            // PROGRESS HANDLING GOES HERE
+ //        });
+ //    }
 
 
 });
@@ -150,6 +145,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            angular.forEach(response.data.children,function(response){
                   $scope.response.push(response.data);
                 });
+
             //tenemos que elimiara el id o ponerlo vacio
            $scope.respuesta.id = '';
            Preguntas.actualiza( $scope.respuesta);
@@ -158,13 +154,11 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            $scope.$broadcast('scroll.refreshComplete');
 
         },function errorCallback(response) {
+           $scope.$broadcast('scroll.refreshComplete');
            var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
              template: 'Ahun no tenemos una respuesta para ti :('
            });
-
-           //terminamos con la animacion del refresh
-           $scope.$broadcast('scroll.refreshComplete');
         });
     }
 
@@ -255,8 +249,6 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
       DiasFact.post($scope.diaDatos);
       console.log( DiasFact.all());
       var temp = {date: new Date(fecha),color: '#000',textColor: '#fff'};
-      // console.log($scope.cal);
-      // $scope.calculo.push(temp);
       $state.go('tab.account', {nuevoColor:'uno'});
     }
 
@@ -281,7 +273,7 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$locati
       $scope.configuracionDatos = ConfiguracionFact.gett();
       $scope.configuracionDatos.inicio = new Date($scope.configuracionDatos.inicio);
       var alrevez = calcularDias($scope.configuracionDatos);
-      $scope.calculo = alrevez.reverse();
+      $scope.calculo = alrevez;
 
       $state.go('tab.account');
     }
@@ -412,7 +404,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
       periodCycleDays = parametros.duraP;
       bleedingDays = parametros.duraS;
       fertilePhaseStart = periodCycleDays - 20;
-      fertilePhaseEnd = periodCycleDays - 11;
+      fertilePhaseEnd = periodCycleDays - 13;
       ovulation = (fertilePhaseStart-1) + (fertilePhaseEnd - fertilePhaseStart)/2;
 
       periodStartDate = new Date(parametros.inicio);
@@ -471,15 +463,16 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
   //  background: repeating-linear-gradient(45deg,#606dbc,#606dbc 10px,#465298 10px,#465298 20px);
     function diasPintados(InitialEvents){
       var fechaParaPintar = [];
-
+      var fin;
+      var inicio;
       InitialEvents.forEach(function(eventos)
       {
         // var desc = Object.getOwnPropertyDescriptor(o, name);
         // Object.defineProperty(copy, name, desc);
         //console.log(eventos.begin);
 
-        var inicio = eventos.begin.getTime();
-        var fin = eventos.end.getTime();
+        inicio = eventos.begin.getTime();
+        fin = eventos.end.getTime();
 
 
         for (var i = inicio; i < fin; i = i + 86400000) {
@@ -487,22 +480,26 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
           if(eventos.summary == "Period"){
             var temp = { date: new Date(i),color: 'red',textColor: '#fff'};
             fechaParaPintar.push(temp);
-          }
-          if(eventos.summary == "Fertile"){
-            var temp = {date: new Date(i),color: '#FBD504',textColor: '#fff'};
-            fechaParaPintar.push(temp);
-          }
-          if(eventos.summary == "Ovulation"){
+          }else if(eventos.summary == "Fertile"){
             var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
             fechaParaPintar.push(temp);
-            var temp = {date: new Date(i+86400000),color: '#DA0203',textColor: '#fff'};
+          }else if(eventos.summary == "Ovulation"){
+            var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
             fechaParaPintar.push(temp);
-            var temp = {date: new Date(i+86400000+86400000),color: '#DA0203',textColor: '#fff'};
-            fechaParaPintar.push(temp);//86400000
           }
         }
 
+
+
       });
+      console.log(fin);
+
+      inicio = InitialEvents[0].begin.getTime();
+      console.log(inicio);
+        for (var i = inicio; i < fin; i = i + 86400000) {
+          var temp = {date: new Date(i),color: '#FBD504',textColor: '#fff'};
+          fechaParaPintar.push(temp);
+        }
 
 
       return fechaParaPintar;
