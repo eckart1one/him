@@ -42,3 +42,22 @@
   color : black !important;
   background: repeating-linear-gradient(45deg, #fff, #fff 5px, red 5px, red 10px) !important;
 }
+
+.box{
+height: 100vh;
+}
+
+.box h1{
+  color: black;
+}
+.blue{
+background-color: blue;
+}
+
+.yellow{
+  background-color: yellow;
+}
+
+.pink{
+  background-color: pink;
+}

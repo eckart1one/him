@@ -1,19 +1,21 @@
-<ion-view view-title="Blogs">
+<ion-view view-title="Mi biblioteca">
   <ion-content>
     <ion-refresher
         pulling-text="Actualizando..."
         on-refresh="CargarNuevosPost()">
     </ion-refresher>
-    
+
       <div class="bar item-input-inset bar-light">
           <label class="item-input-wrapper">
             <i class="icon ion-search placeholder-icon"></i>
               <input type="search" ng-model="busqueda" placeholder="Buscar" />
           </label>
-      </div>   
+      </div>
    <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right item-text-wrap" ng-repeat="articulo in articulos | filter:  busqueda" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
-<img ng-src="{{articulo.images[0].ruta}}" ng-if="articulo.images[0].ruta.indexOf('birdev') === 0" >
+
+<!--         -->
+<img ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" >
         <h2>{{articulo.title}}</h2>
         <p ng-bind-html="articulo.description | limitTo : 100"></p>
         <i class="icon ion-chevron-right icon-accessory"></i>

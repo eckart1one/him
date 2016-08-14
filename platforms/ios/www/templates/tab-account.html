@@ -1,9 +1,30 @@
 <ion-view view-title="Calendario">
 	<ion-nav-buttons side="right">
 		<button class="button button-clear icon ion-gear-a" ng-click="configuracion()"></button>
-	</ion-nav-buttons>    
+	</ion-nav-buttons>
 	<ion-content class="has-header padding">
 		<onezone-datepicker datepicker-object="onezoneDatepicker"></onezone-datepicker>
+		<div class="card">
+			<div class="item item-divider">
+				Señalética
+			</div>
+			<div class="item item-text-wrap">
+				<div class="color rayas"></div>
+				<h2>Rayado</h2>
+				<p>Días de sangrado.</p>
+			</div>
+			<div class="item item-text-wrap">
+				<div class="color rojo"></div>
+				<h2>Rojo</h2>
+				<p>Días de mayor riesgo para embarazo.</p>
+			</div>
+			<div class="item item-text-wrap">
+				<div class="color amarillo"></div>
+				<h2>Amarillo</h2>
+				<p>Días menor riesgo para embarazo.</p>
+			</div>
+		</div>
+
 	</ion-content>
 
 	<!-- <button  style="font-weight:600;" class=" button button-positive  button-block " ng-click="calcularCalendario()">Calcular</button> -->
