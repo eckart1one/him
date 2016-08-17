@@ -31,6 +31,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
+  .state('slide', {
+    url: '/slide',
+    templateUrl: 'templates/slide_tutorial.html',
+    controller: 'slideCtrl'
+  })
     .state('tab', {
     url: '/tab',
     abstract: true,
@@ -57,7 +62,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
-  
+
   .state('tab.chats', {
       url: '/chats',
       views: {
@@ -76,7 +81,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 //        }
 //      }
 //    })
-  
+
 .state('tab.calendario-detalle', {
     url: '/dia/:fecha',
     views: {
@@ -97,9 +102,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     }
   })
-  
- 
-  
+
+
+
 .state('tab.account', {
     url: '/account',
     views: {
@@ -114,6 +119,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/login');
 
 });
-    
-    
+
+
 }());

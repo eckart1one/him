@@ -31,11 +31,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
-  .state('slide', {
-    url: '/slide',
-    templateUrl: 'templates/slide_tutorial.html',
-    controller: 'slideCtrl'
-  })
     .state('tab', {
     url: '/tab',
     abstract: true,

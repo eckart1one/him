@@ -117,7 +117,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$state
   $scope.articulo = Articulos.get($stateParams.articuloId);
 
   $scope.shareAnywhere = function() {
-       $cordovaSocialSharing.share("This is your message", "This is your subject", "www/imagefile.png", "https://www.thepolyglotdeveloper.com");
+       $cordovaSocialSharing.share("Este es un mensaje", "Esto es mi asunto", "www/img/logo.png", "birdev.mx");
    }
 
 });
@@ -565,6 +565,33 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
      });
   }
 
+
+
+});
+
+
+app.controller('slideCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$state){
+
+  $scope.options = {
+    loop: false,
+    effect: 'fade',
+    speed: 500,
+  }
+
+  $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
+    // data.slider is the instance of Swiper
+    $scope.slider = data.slider;
+  });
+
+  $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
+    console.log('Slide change is beginning');
+  });
+
+  $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
+    // note: the indexes are 0-based
+    $scope.activeIndex = data.activeIndex;
+    $scope.previousIndex = data.previousIndex;
+  });
 
 
 });
