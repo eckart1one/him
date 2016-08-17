@@ -31,6 +31,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
+<<<<<<< HEAD
 
   .state('inicio', {
     url: '/inicio',
@@ -44,6 +45,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
     controller: 'loginCtrl'
   })
 
+=======
+  .state('slide', {
+    url: '/slide',
+    templateUrl: 'templates/slide_tutorial.html',
+    controller: 'slideCtrl'
+  })
+>>>>>>> master
     .state('tab', {
     url: '/tab',
     abstract: true,
