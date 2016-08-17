@@ -3,7 +3,7 @@ var app = angular.module('starter.controllers', [])
 app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
     $scope.articulos = Articulos.all();
 
-    if (typeof Auten.validar().matricula != 'undefined')
+    if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -106,7 +106,7 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
 });
 
 app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos, $cordovaSocialSharing) {
-  if (typeof Auten.validar().matricula != 'undefined')
+  if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -124,7 +124,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$state
 
 app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce,$ionicPopup,$ionicLoading)
 {
-    if (typeof Auten.validar().matricula != 'undefined')
+    if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -177,7 +177,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
              console.log("The loading indicator is now displayed");
           });
 
-        $http.post(link, {matricula : Auten.validar().matricula, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
+        $http.post(link, {telefono : Auten.validar().telefono, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
             $scope.respuesta.id =  $scope.nota.id;
             $scope.respuesta.mensaje =  '';
@@ -211,7 +211,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
 
 
 app.controller('ChatDetailCtrl', function($scope,Auten, $state,$stateParams, Chats) {
-  if (typeof Auten.validar().matricula != 'undefined')
+  if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -225,7 +225,7 @@ app.controller('ChatDetailCtrl', function($scope,Auten, $state,$stateParams, Cha
 //controlador de datos por cada dia
 app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$state, $location,   $ionicPopover) {
   //validacion de la sesion
-  if (typeof Auten.validar().matricula != 'undefined')
+  if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -260,7 +260,7 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
 });
 
 app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact,$ionicHistory) {
-    if (typeof Auten.validar().matricula != 'undefined')
+    if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -492,51 +492,68 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
             fechaParaPintar.push(temp);
           }
         }
-
-
-
       });
       console.log(fin);
-
       inicio = InitialEvents[0].begin.getTime();
       console.log(inicio);
         for (var i = inicio; i < fin; i = i + 86400000) {
           var temp = {date: new Date(i),color: '#FBD504',textColor: '#fff'};
           fechaParaPintar.push(temp);
         }
-
-
       return fechaParaPintar;
-
     }
-
-
-
-
 });
-
-
-
 
 app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$state){
     //console.log(Auten.valida());
-    if (typeof Auten.validar().matricula != 'undefined')
+    if (typeof Auten.validar().telefono != 'undefined')
     {
        $state.go('tab.articulos');
     }
-
-
-  $scope.aut = {matricula: '', pass :  '' };
+    document.getElementsByTagName("ion-nav-bar")[0].style.display = "block";
+  $scope.aut = {telefono: '', pass :  '' };
   // $scope.nota =  {id: '', mensaje:''};
+
+  $scope.registrar =  function(){
+      $state.go("register");
+  }
+
+  $scope.guardar =  function(){
+      console.log($scope.aut);
+      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.nombre == 'undefined')
+      {
+         mensajeError("Faltan campos por llenar");
+         exit();
+      }
+      var url  = 'http://www.birdev.mx/message_app/public/user';
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1})
+           .then(function successCallback(response)
+           {
+              console.log("Ya guardo");
+              if(response.data.mensaje == -1)
+              {
+                accesoError();
+              }
+              else if(response.data.mensaje == 0)
+              {
+                accesoError();
+              }
+              else if(response.data.mensaje == 1)
+              {
+                  //Auten.crearSesion($scope.aut.telefono , $scope.aut.pass);
+                  $state.go('login');
+              }
+        },function errorCallback(response) {
+            accesoError();
+        });
+  }
 
   $scope.validar =  function(){
     var url  = 'http://www.birdev.mx/message_app/public/user';
 
-      $http.post(url, { matricula : $scope.aut.matricula, password: $scope.aut.pass })
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass })
            .then(function successCallback(response)
            {
-
-
             if(response.data.mensaje == -1)
             {
               accesoError();
@@ -548,23 +565,62 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
             else
             {
                 Auten.crearSesion($scope.aut);
-
                 $state.go('tab.articulos');
             }
-
         },function errorCallback(response) {
             accesoError();
         });
   }
 
-
   function accesoError(){
     var alertPopup = $ionicPopup.alert({
        title: 'Oh no!!',
-       template: 'La matricula o Contraseña son icorrectas :('
+       template: 'El telefono o Contraseña son incorrectas :('
      });
   }
 
+  function mensajeError(mensaje){
+    var alertPopup = $ionicPopup.alert({
+       title: 'Oh no!!',
+       template: mensaje+' :('
+     });
+  }
 
+});
 
+app.controller('inicioCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
+  document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
+
+  $scope.comienza =  function(){
+      $state.go('slide');
+  }
+
+  $scope.login =  function(){
+      $state.go('login');
+  }
+
+  });
+
+app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
+  document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
+  $scope.options = {
+  loop: false,
+  effect: 'fade',
+  speed: 500,
+  }
+
+  $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
+    // data.slider is the instance of Swiper
+    $scope.slider = data.slider;
+  });
+
+  $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
+    console.log('Slide change is beginning');
+  });
+
+  $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
+    // note: the indexes are 0-based
+    $scope.activeIndex = data.slider.activeIndex;
+    $scope.previousIndex = data.slider.previousIndex;
+  });
 });

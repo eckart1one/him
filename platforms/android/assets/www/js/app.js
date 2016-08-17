@@ -31,6 +31,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
+
+  .state('inicio', {
+    url: '/inicio',
+    templateUrl: 'templates/inicio.html',
+    controller: 'inicioCtrl'
+  })
+
+  .state('register', {
+    url: '/register',
+    templateUrl: 'templates/register.html',
+    controller: 'loginCtrl'
+  })
+
     .state('tab', {
     url: '/tab',
     abstract: true,
@@ -57,7 +70,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
-  
+
   .state('tab.chats', {
       url: '/chats',
       views: {
@@ -76,7 +89,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 //        }
 //      }
 //    })
-  
+
 .state('tab.calendario-detalle', {
     url: '/dia/:fecha',
     views: {
@@ -97,9 +110,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     }
   })
-  
- 
-  
+
+
+
 .state('tab.account', {
     url: '/account',
     views: {
@@ -108,12 +121,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
         controller: 'AccountCtrl'
       }
     }
-  });
+  })
+
+  .state('slide', {
+      url: '/slide',
+      templateUrl: 'templates/slide.html',
+      controller: 'slideCtrl'
+    });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/inicio');
 
 });
-    
-    
+
+
 }());
