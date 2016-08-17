@@ -1,18 +1,20 @@
 <ion-view view-title="{{articulo.title}}">
 
-    <ion-content class="padding">   
+    <ion-content class="padding">
         <div class="list card">
             <div class="item item-body">
                 <img  class="full-image" ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" >
 
                 <p ng-bind-html="articulo.description"></p>
             </div>
+            <button class="button" ng-click="shareAnywhere()">compartir  cualquier cosa</button>
         </div>
+        <!-- desplegado del video -->
            <ion-item ng-if="articulo.video.indexOf('http') === 0" >
             <div class="video-container">
-        <youtube-video video-url="articulo.video"></youtube-video>
-                </div>
+                <youtube-video video-url="articulo.video"></youtube-video>
+            </div>
         </ion-item>
     </ion-content>
-    
+
 </ion-view>

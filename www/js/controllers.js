@@ -105,7 +105,7 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos) {
+app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   if (typeof Auten.validar().matricula != 'undefined')
     {
       console.log(Auten.validar());
@@ -115,6 +115,10 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$state
     }
 
   $scope.articulo = Articulos.get($stateParams.articuloId);
+
+  $scope.shareAnywhere = function() {
+       $cordovaSocialSharing.share("Este es un mensaje", "Esto es mi asunto", "www/img/logo.png", "birdev.mx");
+   }
 
 });
 

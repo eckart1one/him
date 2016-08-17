@@ -164,6 +164,13 @@ module.exports = [
         "clobbers": [
             "window.FileTransfer"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-x-socialsharing/www/SocialSharing.js",
+        "id": "cordova-plugin-x-socialsharing.SocialSharing",
+        "clobbers": [
+            "window.plugins.socialsharing"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -172,7 +179,8 @@ module.exports.metadata =
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-file": "4.2.0",
     "cordova-plugin-file-transfer": "1.5.1",
-    "cordova-plugin-whitelist": "1.2.3-dev"
+    "cordova-plugin-whitelist": "1.2.3-dev",
+    "cordova-plugin-x-socialsharing": "5.1.1"
 };
 // BOTTOM OF METADATA
 });

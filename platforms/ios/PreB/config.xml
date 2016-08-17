@@ -22,6 +22,10 @@
     <feature name="FileTransfer">
         <param name="ios-package" value="CDVFileTransfer" />
     </feature>
+    <feature name="SocialSharing">
+        <param name="ios-package" value="SocialSharing" />
+        <param name="onload" value="true" />
+    </feature>
     <name>PreB</name>
     <description>
         Aplicación para prevención de embarazos en adolescentes y divulgación de métodos anticonceptivos.
