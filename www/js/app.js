@@ -36,10 +36,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     abstract: true,
     templateUrl: 'templates/tabs.html'
   })
-
   // Each tab has its own nav history stack:
-
-  .state('tab.articulos', {
+ .state('tab.articulos', {
     url: '/articulos',
     views: {
       'tab-articulos': {
